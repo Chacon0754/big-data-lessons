@@ -1,0 +1,325 @@
+% !TeX root = ../../main.tex
+
+\section{Introducción}
+
+HDFS es el sistema de almacenamiento distribuido utilizado por Apache Hadoop.
+Su función es guardar archivos muy grandes en un conjunto de computadoras y
+mantenerlos disponibles incluso cuando alguno de los equipos presenta una
+falla.
+
+\section{¿Qué es HDFS?}
+
+HDFS significa \textit{Hadoop Distributed File System}. Es un sistema de
+archivos distribuido que divide los archivos en bloques y los almacena en
+diferentes computadoras de un clúster.
+
+HDFS está diseñado para almacenar grandes cantidades de información y ofrecer
+un acceso de alto rendimiento. Su modelo se orienta a escribir los datos una
+vez y leerlos muchas veces.
+
+\section{Objetivos de su diseño}
+
+Los principales objetivos del diseño de HDFS son:
+
+\begin{itemize}
+    \item Almacenar archivos de gran tamaño.
+    \item Utilizar varias computadoras como un solo sistema de almacenamiento.
+    \item Funcionar con hardware convencional.
+    \item Mantener los datos disponibles cuando falla un nodo.
+    \item Proporcionar un alto rendimiento en la lectura de datos.
+    \item Facilitar el crecimiento del sistema mediante nuevos DataNodes.
+    \item Ejecutar el procesamiento cerca de donde se encuentran los datos.
+\end{itemize}
+
+HDFS prioriza el rendimiento general y la tolerancia a fallos sobre el acceso
+inmediato a registros individuales.
+
+\section{Historia de HDFS}
+
+El origen de HDFS está relacionado con Nutch, un motor de búsqueda de código
+abierto desarrollado por Doug Cutting y Mike Cafarella. El crecimiento de la
+información de Internet hizo necesario crear un sistema de almacenamiento
+distribuido.
+
+En 2003, Google publicó un artículo sobre Google File System. Sus ideas
+sirvieron como base para desarrollar Nutch Distributed File System. Más tarde,
+este sistema evolucionó y pasó a formar parte de Hadoop con el nombre de HDFS.
+
+HDFS se convirtió en uno de los componentes principales de Apache Hadoop.
+Versiones posteriores incorporaron mejoras como alta disponibilidad,
+federación de NameNodes y codificación de borrado para aprovechar mejor el
+espacio de almacenamiento.
+
+\section{Características principales}
+
+Las características principales de HDFS son:
+
+\begin{itemize}
+    \item \textbf{Almacenamiento distribuido:} los archivos se guardan en
+    diferentes nodos.
+
+    \item \textbf{Bloques grandes:} los archivos se dividen en bloques de gran
+    tamaño, normalmente de 128 MB, aunque este valor puede configurarse.
+
+    \item \textbf{Replicación:} cada bloque puede almacenarse en varios
+    DataNodes.
+
+    \item \textbf{Tolerancia a fallos:} si un nodo falla, los datos pueden
+    obtenerse desde otra réplica.
+
+    \item \textbf{Escalabilidad:} permite agregar DataNodes para aumentar la
+    capacidad.
+
+    \item \textbf{Alto rendimiento:} está optimizado para leer grandes
+    cantidades de datos de manera continua.
+
+    \item \textbf{Data Locality:} intenta ejecutar el procesamiento cerca de
+    los datos.
+
+    \item \textbf{Modelo de escritura simple:} está orientado a escribir una
+    vez y leer muchas veces.
+\end{itemize}
+
+\section{Arquitectura de HDFS}
+
+HDFS utiliza una arquitectura maestro-trabajador. El NameNode funciona como
+el nodo principal y los DataNodes funcionan como nodos de almacenamiento.
+
+El NameNode administra el espacio de nombres y los metadatos. Por ejemplo,
+conoce los nombres de los archivos, sus permisos, los bloques que los forman
+y los DataNodes donde se encuentran.
+
+Los DataNodes almacenan físicamente los bloques y atienden las solicitudes de
+lectura y escritura de los clientes. El cliente primero consulta al NameNode
+para localizar los bloques y después se comunica directamente con los
+DataNodes.
+
+Esta separación permite que el NameNode coordine el sistema sin transportar
+el contenido completo de cada archivo.
+
+\section{Componentes principales}
+
+Los principales componentes de HDFS son:
+
+\begin{enumerate}
+    \item \textbf{NameNode:} administra los metadatos, el espacio de nombres
+    y la ubicación de los bloques.
+
+    \item \textbf{DataNode:} almacena los bloques, atiende solicitudes de los
+    clientes y ejecuta las órdenes de creación, eliminación y replicación.
+
+    \item \textbf{Cliente HDFS:} permite crear, leer, escribir y eliminar
+    archivos. Consulta al NameNode y transfiere los datos con los DataNodes.
+
+    \item \textbf{NameNode activo y en espera:} en una configuración de alta
+    disponibilidad, uno atiende las solicitudes y otro mantiene una copia
+    actualizada para sustituirlo si ocurre una falla.
+
+    \item \textbf{JournalNodes:} conservan los registros de cambios que
+    permiten sincronizar los NameNodes activo y en espera.
+\end{enumerate}
+
+El Secondary NameNode crea puntos de control al combinar la imagen del sistema
+de archivos con el registro de cambios. No debe confundirse con un reemplazo
+automático del NameNode principal.
+
+\section{Arquitectura maestro-esclavo}
+
+Una arquitectura maestro-esclavo, también llamada actualmente
+maestro-trabajador, es un modelo donde un componente principal coordina a
+varios componentes secundarios.
+
+En HDFS, el NameNode es el maestro porque administra los metadatos y decide
+dónde deben almacenarse los bloques. Los DataNodes son los trabajadores porque
+guardan los bloques y ejecutan las operaciones solicitadas.
+
+Este modelo facilita la administración del clúster, pero también hace necesario
+proteger al NameNode mediante mecanismos de alta disponibilidad.
+
+\section{Almacenamiento por bloques}
+
+HDFS no almacena necesariamente un archivo completo en una sola computadora.
+Primero lo divide en bloques de tamaño fijo. Después distribuye esos bloques
+entre diferentes DataNodes.
+
+Por ejemplo, si el tamaño de bloque es de 128 MB, un archivo de 300 MB puede
+dividirse en dos bloques de 128 MB y uno de 44 MB. Cada bloque puede tener
+varias réplicas.
+
+\subsection{NameNode}
+
+El NameNode no almacena normalmente el contenido de los archivos. Conserva
+información como:
+
+\begin{itemize}
+    \item Nombre y ruta de cada archivo.
+    \item Permisos y propietario.
+    \item Bloques que forman el archivo.
+    \item Ubicación de las réplicas.
+    \item Estado de los DataNodes.
+\end{itemize}
+
+\subsection{DataNode}
+
+Los DataNodes almacenan los bloques en sus discos. También realizan las
+siguientes actividades:
+
+\begin{itemize}
+    \item Leer y escribir bloques.
+    \item Crear y eliminar bloques.
+    \item Enviar reportes de bloques al NameNode.
+    \item Enviar señales periódicas de funcionamiento.
+    \item Replicar bloques cuando lo solicita el NameNode.
+\end{itemize}
+
+\section{Funcionamiento de HDFS}
+
+\subsection{Proceso de lectura}
+
+El proceso de lectura funciona de la siguiente manera:
+
+\begin{enumerate}
+    \item El cliente solicita abrir un archivo.
+    \item El NameNode verifica la solicitud y localiza sus bloques.
+    \item El NameNode devuelve una lista de DataNodes que poseen las réplicas.
+    \item El cliente selecciona el DataNode más cercano.
+    \item El DataNode envía el primer bloque directamente al cliente.
+    \item El cliente continúa con los siguientes bloques hasta completar el
+    archivo.
+    \item Al finalizar, el cliente cierra la conexión.
+\end{enumerate}
+
+Si un DataNode no responde o entrega un bloque dañado, el cliente intenta leer
+otra réplica.
+
+\subsection{Proceso de escritura}
+
+El proceso de escritura se realiza así:
+
+\begin{enumerate}
+    \item El cliente solicita crear un archivo.
+    \item El NameNode comprueba los permisos y verifica que el archivo no
+    exista.
+    \item El NameNode selecciona los DataNodes donde se almacenarán las
+    réplicas.
+    \item El cliente divide la información en paquetes y los envía al primer
+    DataNode.
+    \item El primer DataNode almacena los paquetes y los envía al segundo.
+    \item El segundo los almacena y los envía al siguiente DataNode.
+    \item Los DataNodes devuelven confirmaciones en sentido contrario.
+    \item El proceso se repite con los demás bloques.
+    \item El cliente cierra el archivo y el NameNode registra la operación.
+\end{enumerate}
+
+Esta cadena de DataNodes se conoce como tubería o
+\textit{replication pipeline}.
+
+\section{Ventajas y desventajas}
+
+\subsection{Ventajas}
+
+\begin{itemize}
+    \item Permite almacenar archivos muy grandes.
+    \item Puede crecer agregando nuevos DataNodes.
+    \item Mantiene copias de los bloques para evitar pérdidas.
+    \item Puede utilizar hardware convencional.
+    \item Ofrece buen rendimiento en lecturas secuenciales.
+    \item Facilita el procesamiento paralelo.
+    \item Detecta fallas y recupera réplicas automáticamente.
+\end{itemize}
+
+\subsection{Desventajas}
+
+\begin{itemize}
+    \item No es adecuado para una gran cantidad de archivos pequeños.
+    \item No está diseñado para modificar continuamente partes de un archivo.
+    \item La replicación consume espacio adicional.
+    \item No es ideal para aplicaciones transaccionales.
+    \item El acceso puede tener mayor latencia que un sistema local.
+    \item Su instalación y administración requieren conocimientos técnicos.
+    \item El NameNode necesita protección especial porque administra todos los
+    metadatos.
+\end{itemize}
+
+\section{Replicación de datos}
+
+La replicación consiste en guardar varias copias de cada bloque en diferentes
+DataNodes. El número de copias se conoce como factor de replicación y puede
+configurarse para cada archivo. Un valor común es tres.
+
+Durante una escritura, el NameNode selecciona una tubería de DataNodes. El
+primer DataNode recibe el bloque, lo guarda y lo envía al siguiente hasta
+completar las réplicas.
+
+HDFS también utiliza conocimiento de los racks. Procura colocar las copias en
+más de un rack para que los datos continúen disponibles si falla un equipo,
+un conmutador o un rack completo.
+
+Si el NameNode detecta que un bloque tiene menos réplicas de las necesarias,
+ordena crear una copia nueva desde alguna réplica disponible.
+
+\section{Data Locality}
+
+Data Locality significa acercar el procesamiento a la ubicación de los datos.
+Mover una tarea pequeña suele ser más eficiente que transferir un archivo de
+gran tamaño por la red.
+
+HDFS y Hadoop utilizan tres niveles principales:
+
+\begin{enumerate}
+    \item \textbf{Node Local:} la tarea se ejecuta en el mismo DataNode donde
+    está el bloque.
+
+    \item \textbf{Rack Local:} la tarea se ejecuta en otro nodo del mismo rack.
+
+    \item \textbf{Off-Rack:} la tarea se ejecuta en un nodo ubicado en otro
+    rack.
+\end{enumerate}
+
+La primera opción es la más eficiente porque reduce el tráfico de red y mejora
+el rendimiento.
+
+\section{Manejo de fallas}
+
+Los DataNodes envían periódicamente una señal llamada \textit{heartbeat} y un
+reporte de sus bloques al NameNode. Si estas señales dejan de llegar, el
+NameNode considera que el DataNode no está disponible.
+
+HDFS maneja las fallas de las siguientes maneras:
+
+\begin{itemize}
+    \item \textbf{Falla durante una lectura:} el cliente abandona el DataNode
+    con problemas y solicita el bloque a otra réplica.
+
+    \item \textbf{Falla durante una escritura:} el DataNode defectuoso se
+    elimina de la tubería y la escritura continúa con los nodos restantes.
+    Después se crea la réplica faltante.
+
+    \item \textbf{Falla de un DataNode:} el NameNode identifica los bloques
+    que perdieron una copia y ordena su replicación en otros nodos.
+
+    \item \textbf{Bloque dañado:} las sumas de verificación permiten detectar
+    corrupción. El sistema utiliza una réplica válida y sustituye la copia
+    dañada.
+
+    \item \textbf{Falla del NameNode:} una configuración de alta disponibilidad
+    utiliza un NameNode activo y otro en espera. Los JournalNodes mantienen
+    sincronizados sus registros para permitir la sustitución.
+
+    \item \textbf{Falla de un rack:} las réplicas colocadas en otros racks
+    mantienen los datos disponibles.
+\end{itemize}
+
+Gracias a estos mecanismos, HDFS puede continuar trabajando ante fallas
+comunes sin perder inmediatamente la información.
+
+\section{Conclusión}
+
+HDFS es un sistema de archivos distribuido diseñado para almacenar grandes
+volúmenes de datos. Su arquitectura utiliza un NameNode para administrar los
+metadatos y varios DataNodes para guardar bloques.
+
+La replicación, el manejo de fallas y la ubicación local de las tareas permiten
+que el sistema sea escalable y confiable. Sin embargo, HDFS funciona mejor con
+archivos grandes y lecturas secuenciales que con archivos pequeños o
+aplicaciones transaccionales.

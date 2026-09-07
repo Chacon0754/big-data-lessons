@@ -1,0 +1,71 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-nodecimaldot]{babel}
+
+\usepackage[
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.5cm,
+    right=2.5cm
+]{geometry}
+
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{parskip}
+
+\usepackage{float}
+
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{catchfile}
+
+\usepackage[
+    backend=biber,
+    style=authoryear,
+    sorting=nyt
+]{biblatex}
+
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{logos/}}
+
+\input{config}
+
+\newcommand{\actividadactual}{actividades/2.5-actividad-1}
+
+\input{\actividadactual/metadata}
+
+\addbibresource{\actividadactual/referencias.bib}
+
+% Leer el contenido de referencias.bib
+\CatchFileDef{\contenidoreferencias}
+{\actividadactual/referencias.bib}
+{}
+
+\begin{document}
+
+% Portada
+\input{portada}
+
+% Contenido
+\input{\actividadactual/contenido}
+
+% Referencias solo si referencias.bib no está vacío
+\ifx\contenidoreferencias\empty
+\else
+    \nocite{*}
+
+    \printbibliography[
+        heading=bibintoc,
+        title={Referencias}
+    ]
+\fi
+
+\end{document}

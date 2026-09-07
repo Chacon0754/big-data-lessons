@@ -1,0 +1,275 @@
+% !TeX root = ../../main.tex
+
+\section{Introducción}
+
+MapReduce es un modelo de programación utilizado para procesar grandes
+cantidades de datos de manera distribuida. Su funcionamiento consiste en
+dividir un problema en tareas pequeñas que pueden ejecutarse al mismo tiempo
+en diferentes computadoras.
+
+Este modelo forma parte de Apache Hadoop y se utiliza principalmente para
+trabajos por lotes.
+
+\section{¿Qué es MapReduce?}
+
+MapReduce es un modelo de programación y procesamiento distribuido que permite
+analizar grandes volúmenes de información utilizando varias computadoras de un
+clúster.
+
+Los datos se representan mediante pares de clave y valor. El procesamiento se
+divide principalmente en dos funciones:
+
+\begin{itemize}
+    \item \textbf{Map:} procesa partes del conjunto de datos y genera resultados
+    intermedios.
+    \item \textbf{Reduce:} combina los resultados intermedios para obtener un
+    resultado final.
+\end{itemize}
+
+El framework se encarga de distribuir las tareas, coordinar las computadoras,
+transferir los datos y repetir una tarea cuando ocurre una falla.
+
+\section{Antecedentes de MapReduce}
+
+Las ideas de \textit{map} y \textit{reduce} tienen su origen en los lenguajes
+de programación funcional. Estas operaciones permiten aplicar una función a
+varios elementos y posteriormente reunir sus resultados.
+
+En 2004, Jeffrey Dean y Sanjay Ghemawat presentaron el modelo MapReduce
+desarrollado por Google. Su propósito era simplificar el procesamiento de
+grandes cantidades de información mediante clústeres formados por miles de
+computadoras.
+
+Posteriormente, el proyecto Apache Hadoop creó una implementación de código
+abierto basada en este modelo. Esto permitió que otras organizaciones pudieran
+utilizar MapReduce junto con HDFS para almacenar y procesar grandes volúmenes
+de datos.
+
+\section{Arquitectura de MapReduce}
+
+La arquitectura de MapReduce combina el almacenamiento distribuido de HDFS con
+varios componentes encargados de administrar y ejecutar las tareas.
+
+Sus elementos principales son los siguientes:
+
+\begin{itemize}
+    \item \textbf{Cliente:} envía el programa, los datos de entrada y la
+    configuración del trabajo.
+
+    \item \textbf{HDFS:} almacena los archivos de entrada y los resultados
+    finales de manera distribuida.
+
+    \item \textbf{ResourceManager:} administra los recursos disponibles en el
+    clúster.
+
+    \item \textbf{ApplicationMaster:} coordina la ejecución de un trabajo
+    específico de MapReduce.
+
+    \item \textbf{NodeManager:} administra los recursos de cada nodo y ejecuta
+    las tareas asignadas.
+
+    \item \textbf{Mappers:} procesan las divisiones de los datos y producen
+    pares de clave y valor intermedios.
+
+    \item \textbf{Reducers:} reciben los valores agrupados por clave y generan
+    los resultados finales.
+\end{itemize}
+
+En Hadoop 1 se utilizaban los componentes \textit{JobTracker} y
+\textit{TaskTracker}. A partir de Hadoop 2, estas funciones fueron separadas y
+administradas mediante YARN, utilizando componentes como ResourceManager,
+ApplicationMaster y NodeManager.
+
+\section{Principales características de MapReduce}
+
+Las características más importantes de MapReduce son:
+
+\begin{itemize}
+    \item Procesa grandes cantidades de datos por lotes.
+    \item Divide un trabajo en varias tareas pequeñas.
+    \item Ejecuta las tareas de forma paralela y distribuida.
+    \item Trabaja con pares de clave y valor.
+    \item Puede aumentar su capacidad agregando más nodos al clúster.
+    \item Aprovecha la ubicación de los datos para reducir transferencias.
+    \item Detecta fallas y puede volver a ejecutar las tareas.
+    \item Permite procesar datos estructurados, semiestructurados y no
+    estructurados.
+    \item Automatiza la distribución, coordinación y supervisión del trabajo.
+\end{itemize}
+
+\section{Funciones Map() y Reduce()}
+
+\subsection*{Función Map()}
+
+La función \texttt{Map()} recibe un par de clave y valor de entrada. Después
+aplica una operación y genera uno o varios pares intermedios.
+
+Su representación general es:
+
+\begin{center}
+\texttt{Map(K1, V1)} $\longrightarrow$ \texttt{lista(K2, V2)}
+\end{center}
+
+Por ejemplo, en un contador de palabras, la función Map separa una línea de
+texto y genera el valor 1 para cada palabra encontrada.
+
+\begin{center}
+\texttt{Hadoop procesa datos}
+\end{center}
+
+La salida sería:
+
+\begin{center}
+\texttt{(Hadoop, 1), (procesa, 1), (datos, 1)}
+\end{center}
+
+\subsection*{Función Reduce()}
+
+La función \texttt{Reduce()} recibe una clave y la lista de valores
+relacionados con ella. Su trabajo consiste en combinar o resumir esos valores.
+
+Su representación general es:
+
+\begin{center}
+\texttt{Reduce(K2, lista(V2))} $\longrightarrow$ \texttt{(K3, V3)}
+\end{center}
+
+Por ejemplo, si recibe:
+
+\begin{center}
+\texttt{(Hadoop, [1, 1, 1])}
+\end{center}
+
+La función suma los valores y produce:
+
+\begin{center}
+\texttt{(Hadoop, 3)}
+\end{center}
+
+\section{Flujo de procesamiento}
+
+El procesamiento de datos con MapReduce se realiza mediante las siguientes
+etapas:
+
+\begin{enumerate}
+    \item \textbf{Entrada:} los archivos de entrada se almacenan normalmente
+    en HDFS.
+
+    \item \textbf{División:} los archivos se dividen en fragmentos llamados
+    \textit{input splits}. Cada fragmento será procesado por una tarea Map.
+
+    \item \textbf{Lectura:} el RecordReader convierte los registros en pares de
+    clave y valor que puede recibir el Mapper.
+
+    \item \textbf{Map:} cada Mapper procesa su fragmento y genera pares
+    intermedios.
+
+    \item \textbf{Combiner:} de manera opcional, combina resultados locales
+    para reducir la cantidad de información enviada por la red.
+
+    \item \textbf{Partition:} determina a qué Reducer se enviará cada clave.
+
+    \item \textbf{Shuffle y Sort:} los resultados se transfieren, ordenan y
+    agrupan de acuerdo con sus claves.
+
+    \item \textbf{Reduce:} cada Reducer procesa una clave y su lista de valores.
+
+    \item \textbf{Salida:} los resultados finales se guardan nuevamente en
+    HDFS.
+\end{enumerate}
+
+De forma resumida, el flujo es:
+
+\begin{center}
+Entrada $\longrightarrow$ División $\longrightarrow$ Map
+$\longrightarrow$ Shuffle y Sort $\longrightarrow$ Reduce
+$\longrightarrow$ Salida
+\end{center}
+
+\section{Ventajas y desventajas}
+
+\subsection*{Ventajas}
+
+\begin{itemize}
+    \item Permite procesar terabytes o petabytes de información.
+    \item Ejecuta varias tareas al mismo tiempo.
+    \item Puede funcionar en computadoras de costo relativamente bajo.
+    \item Es escalable porque se pueden agregar más nodos.
+    \item Ofrece tolerancia a fallas mediante la repetición de tareas.
+    \item Reduce movimientos innecesarios al procesar los datos cerca de donde
+    están almacenados.
+    \item Simplifica algunos trabajos de procesamiento distribuido.
+\end{itemize}
+
+\subsection*{Desventajas}
+
+\begin{itemize}
+    \item Está orientado al procesamiento por lotes y no al tiempo real.
+    \item Puede presentar una latencia alta.
+    \item Las operaciones de lectura y escritura en disco pueden hacerlo lento.
+    \item La transferencia de datos durante \textit{shuffle} consume recursos
+    de la red.
+    \item No es eficiente para conjuntos de datos pequeños.
+    \item Los algoritmos iterativos pueden requerir varios trabajos MapReduce.
+    \item La fase Reduce normalmente debe esperar a que las tareas Map terminen.
+\end{itemize}
+
+\section{Ejemplo de uso: contador de palabras}
+
+Un ejemplo sencillo de MapReduce consiste en contar cuántas veces aparece cada
+palabra en un archivo.
+
+Supongamos que el archivo contiene las siguientes líneas:
+
+\begin{center}
+\texttt{Hadoop procesa datos}\\
+\texttt{Hadoop almacena datos}
+\end{center}
+
+\subsection*{Resultado de Map}
+
+Cada Mapper separa las palabras y genera los siguientes pares:
+
+\begin{itemize}
+    \item \texttt{(Hadoop, 1)}
+    \item \texttt{(procesa, 1)}
+    \item \texttt{(datos, 1)}
+    \item \texttt{(Hadoop, 1)}
+    \item \texttt{(almacena, 1)}
+    \item \texttt{(datos, 1)}
+\end{itemize}
+
+\subsection*{Resultado de Shuffle y Sort}
+
+El framework agrupa los valores que tienen la misma clave:
+
+\begin{itemize}
+    \item \texttt{(Hadoop, [1, 1])}
+    \item \texttt{(datos, [1, 1])}
+    \item \texttt{(procesa, [1])}
+    \item \texttt{(almacena, [1])}
+\end{itemize}
+
+\subsection*{Resultado de Reduce}
+
+Finalmente, la función Reduce suma los valores de cada palabra:
+
+\begin{itemize}
+    \item \texttt{(Hadoop, 2)}
+    \item \texttt{(datos, 2)}
+    \item \texttt{(procesa, 1)}
+    \item \texttt{(almacena, 1)}
+\end{itemize}
+
+Este mismo procedimiento puede aplicarse a archivos mucho más grandes,
+distribuyendo el trabajo entre diferentes nodos del clúster.
+
+\section{Conclusión}
+
+MapReduce permite procesar grandes volúmenes de información mediante la
+división del trabajo en tareas Map y Reduce. Sus principales ventajas son el
+procesamiento paralelo, la escalabilidad y la tolerancia a fallas.
+
+Aunque no es la mejor opción para aplicaciones en tiempo real o procesos
+iterativos, continúa siendo un modelo importante para comprender el
+funcionamiento del procesamiento distribuido dentro del ecosistema Hadoop.

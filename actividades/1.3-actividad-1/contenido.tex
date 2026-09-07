@@ -1,0 +1,154 @@
+% !TeX root = ../../main.tex
+
+\section{Conceptos básicos de Big Data}
+
+\begin{enumerate}
+
+\item \textbf{¿Qué es Big Data?}
+
+Big Data es un conjunto de datos cuyo volumen, velocidad o variedad supera la capacidad de las herramientas tradicionales para almacenarlos, procesarlos y analizarlos de manera eficiente .
+
+\item \textbf{Históricamente, ¿cómo han evolucionado las fuentes o generadores de datos?}
+
+La generación de datos ha evolucionado de la siguiente manera:
+
+\begin{itemize}
+    \item Antes de 1980, los datos eran generados principalmente por dispositivos.
+    \item Entre 1980 y 2000, los empleados generaban datos al utilizar sistemas informáticos.
+    \item Desde el año 2000, las personas comenzaron a producir datos mediante correos electrónicos, redes sociales y páginas web.
+    \item Después de 2005, el hardware, el software, las aplicaciones y los dispositivos del Internet de las cosas comenzaron a generar grandes cantidades de registros automáticamente.
+\end{itemize}
+
+\item \textbf{¿Qué y cuánto se genera cada 60 segundos en el mundo digital? Datos de 2023.}
+
+Según el informe \textit{Data Never Sleeps 11.0}, durante cada minuto de 2023 se realizaron, entre otras, las siguientes actividades:
+
+\begin{itemize}
+    \item 6.3 millones de búsquedas en Google.
+    \item 41.6 millones de mensajes enviados por WhatsApp.
+    \item 241 millones de correos electrónicos enviados.
+    \item 360\,000 publicaciones realizadas en X.
+    \item 694\,000 reels enviados por mensaje directo en Instagram.
+    \item 4 millones de publicaciones recibieron ``Me gusta'' en Facebook.
+    \item 6\,944 solicitudes fueron enviadas a ChatGPT.
+    \item Se consumieron 43 años de contenido en servicios de transmisión.
+    \item Se reprodujeron 24\,000 horas de música en Spotify.
+    \item Se realizaron más de \$455\,000 en compras en Amazon.
+    \item Se enviaron \$463\,768 mediante Venmo.
+    \item Se realizaron \$122\,785 en pedidos de DoorDash.
+    \item Se produjeron 30 ataques de denegación de servicio distribuido (DDoS).
+\end{itemize}
+
+\item \textbf{¿Por qué es necesario almacenar y procesar datos en Big Data?}
+
+Es necesario almacenar datos históricos para aprender de ellos, encontrar patrones y tomar mejores decisiones. Su procesamiento permite descubrir información útil, resolver problemas, reducir riesgos y crear nuevas oportunidades.
+
+\item \textbf{Mencione ejemplos de aplicaciones de Big Data.}
+
+Algunos ejemplos son:
+
+\begin{itemize}
+    \item Recomendaciones de productos en tiendas en línea.
+    \item Detección de fraudes bancarios.
+    \item Análisis de redes sociales y opiniones.
+    \item Optimización del tráfico y las rutas de transporte.
+    \item Análisis de expedientes médicos y genomas.
+    \item Predicción de enfermedades y desastres naturales.
+    \item Análisis del mercado de valores.
+    \item Seguridad y prevención de delitos.
+\end{itemize}
+
+\item \textbf{Mencione las principales características de Big Data.}
+
+Las principales características se conocen como las ``V'' de Big Data:
+
+\begin{itemize}
+    \item \textbf{Volumen:} gran cantidad de datos.
+    \item \textbf{Velocidad:} rapidez con la que los datos se generan y procesan.
+    \item \textbf{Variedad:} existencia de diferentes formatos y fuentes.
+    \item \textbf{Valor:} utilidad que puede obtenerse de los datos.
+    \item \textbf{Veracidad:} nivel de exactitud y confiabilidad.
+    \item \textbf{Variabilidad:} cambios en el comportamiento y significado de los datos.
+    \item \textbf{Volatilidad:} tiempo durante el cual los datos siguen siendo útiles.
+    \item \textbf{Complejidad:} relaciones existentes entre grandes cantidades de variables.
+\end{itemize}
+
+\item \textbf{Describa las principales unidades de medida de datos.}
+
+El bit es la unidad mínima y puede tener el valor 0 o 1. Un byte está formado por 8 bits. Las unidades principales son:
+
+\begin{itemize}
+    \item Kilobyte (KB): 1\,024 bytes.
+    \item Megabyte (MB): 1\,024 KB.
+    \item Gigabyte (GB): 1\,024 MB.
+    \item Terabyte (TB): 1\,024 GB.
+    \item Petabyte (PB): 1\,024 TB.
+    \item Exabyte (EB): 1\,024 PB.
+    \item Zettabyte (ZB): 1\,024 EB.
+    \item Yottabyte (YB): 1\,024 ZB.
+\end{itemize}
+
+\item \textbf{Explique los diferentes tipos de datos.}
+
+\begin{itemize}
+    \item \textbf{Estructurados:} tienen una organización y un esquema definido, como las tablas de una base de datos.
+    \item \textbf{Semiestructurados:} poseen cierta organización, pero no una estructura rígida. Algunos ejemplos son XML, HTML, JSON, correos electrónicos y registros de aplicaciones.
+    \item \textbf{No estructurados:} no tienen un esquema fijo. Por ejemplo, imágenes, videos, audios y documentos de texto.
+\end{itemize}
+
+Estos tres tipos pueden formar parte de un sistema de Big Data
+
+\item \textbf{¿Cuáles son las diferencias entre datos estructurados y no estructurados?}
+
+Los datos estructurados tienen campos y formatos definidos, por lo que pueden almacenarse fácilmente en tablas y consultarse mediante SQL. Los datos no estructurados no siguen un esquema fijo, presentan formatos variados y requieren herramientas especiales para almacenarlos y analizarlos.
+
+\item \textbf{¿Cuáles son los tipos de sistemas de Big Data?}
+
+Existen dos tipos principales
+
+\begin{itemize}
+    \item \textbf{Sistemas operacionales:} procesan actividades diarias y proporcionan respuestas rápidas o en tiempo real.
+    \item \textbf{Sistemas analíticos:} procesan grandes conjuntos de datos para encontrar patrones y apoyar la toma de decisiones.
+\end{itemize}
+
+\item \textbf{Defina los siguientes conceptos.}
+
+\begin{itemize}
+    \item[a)] \textbf{Transacción:} conjunto de operaciones relacionadas que deben realizarse correctamente y en un orden determinado. Por ejemplo, retirar dinero de una cuenta y depositarlo en otra.
+
+    \item[b)] \textbf{Base de datos transaccional:} base de datos que permite realizar transacciones de forma segura y consistente. Se utiliza, por ejemplo, en bancos y sistemas financieros.
+
+    \item[c)] \textbf{Base de datos operacional:} base de datos diseñada para las operaciones cotidianas, como insertar, consultar, actualizar y eliminar información. Debe responder rápidamente y puede utilizar tecnologías NoSQL.
+\end{itemize}
+
+
+\item \textbf{¿Cuáles son las diferencias entre los sistemas de Big Data operacional y analítico?}
+
+\begin{itemize}
+    \item El sistema operacional responde en milisegundos; el analítico puede tardar minutos u horas.
+    \item El operacional atiende a muchos usuarios al mismo tiempo; el analítico suele ser utilizado por pocos especialistas.
+    \item El operacional realiza lecturas, escrituras y actualizaciones frecuentes; el analítico trabaja principalmente con cargas y lecturas masivas.
+    \item El operacional utiliza comúnmente bases NoSQL; el analítico emplea almacenes de datos, Hadoop o Spark.
+    \item El operacional apoya actividades diarias; el analítico ayuda a encontrar patrones y tomar decisiones.
+\end{itemize}
+
+\item \textbf{¿Qué es el escalamiento horizontal?}
+
+Consiste en agregar más computadoras o nodos a un grupo para distribuir los datos y procesarlos en paralelo. Los equipos trabajan juntos como un solo sistema lógico.
+
+\item \textbf{¿Qué es el escalamiento vertical?}
+
+Consiste en aumentar los recursos de una sola computadora, por ejemplo, agregando memoria, almacenamiento o procesadores más potentes.
+
+\item \textbf{Mencione las diferencias entre el escalamiento vertical y horizontal.}
+
+\begin{itemize}
+    \item El escalamiento horizontal agrega más computadoras; el vertical mejora una sola computadora.
+    \item El horizontal puede crecer agregando nodos; el vertical está limitado por la capacidad máxima del hardware.
+    \item En el horizontal, la falla de un nodo no necesariamente detiene todo el sistema; en el vertical, la falla del servidor puede detener el servicio.
+    \item El horizontal utiliza hardware común y suele ser más económico; el vertical requiere equipos más potentes y costosos.
+    \item El horizontal necesita software distribuido más complejo; el vertical es más sencillo de administrar.
+    \item El horizontal puede ampliarse sin detener el sistema; el vertical normalmente requiere apagar o reiniciar el servidor.
+\end{itemize}
+
+\end{enumerate}

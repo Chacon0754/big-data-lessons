@@ -1,0 +1,632 @@
+% !TeX root = ../../main.tex
+
+\section{Frameworks de Big Data: Apache Hadoop y Apache Flink}
+
+\subsection{Introducción}
+
+Los frameworks de Big Data permiten almacenar y procesar grandes cantidades
+de información utilizando varias computadoras. Su objetivo es distribuir el
+trabajo para obtener resultados en menos tiempo y continuar funcionando
+aunque alguno de los equipos presente una falla.
+
+Apache Hadoop y Apache Flink son proyectos de código abierto administrados por
+la Apache Software Foundation. Sin embargo, tienen enfoques diferentes.
+Hadoop se utiliza principalmente para almacenar información y ejecutar
+procesos por lotes, mientras que Flink está especializado en el procesamiento
+continuo de datos en tiempo real.
+
+\section{Apache Hadoop}
+
+\subsection{Descripción}
+
+Apache Hadoop es un framework de código abierto diseñado para almacenar y
+procesar grandes volúmenes de datos de manera distribuida. Divide la
+información y el trabajo entre diferentes computadoras que forman un clúster.
+
+Hadoop fue diseñado para trabajar con equipos de costo relativamente bajo y
+para recuperarse automáticamente cuando uno de los nodos presenta una falla.
+Puede utilizarse con datos estructurados, semiestructurados y no estructurados.
+
+\subsection{Características}
+
+Las principales características de Hadoop son:
+
+\begin{itemize}
+    \item Almacenamiento distribuido de grandes cantidades de información.
+    \item Procesamiento paralelo en varias computadoras.
+    \item Escalabilidad horizontal mediante la incorporación de nuevos nodos.
+    \item Tolerancia a fallas por medio de replicación y recuperación de tareas.
+    \item Uso de hardware comercial.
+    \item Capacidad para procesar datos estructurados y no estructurados.
+    \item Integración con numerosos proyectos de código abierto.
+    \item Adecuado para procesos por lotes.
+\end{itemize}
+
+\subsection{Antecedentes e historia}
+
+Hadoop tiene su origen en el proyecto de motor de búsqueda Nutch, desarrollado
+por Doug Cutting y Mike Cafarella. Su diseño recibió influencia de los
+documentos publicados por Google sobre el sistema de archivos Google File
+System y el modelo de procesamiento MapReduce.
+
+En 2006 se creó Hadoop como un proyecto independiente. Yahoo apoyó su
+desarrollo y lo utilizó para procesar grandes cantidades de información de su
+motor de búsqueda. Con el tiempo, Hadoop se convirtió en uno de los proyectos
+más representativos del Big Data.
+
+La versión 1.0 fue publicada en 2011 y anunciada oficialmente en enero de 2012.
+Posteriormente, Hadoop 2 incorporó YARN para separar la administración de
+recursos del procesamiento. Hadoop 3 añadió mejoras de rendimiento,
+disponibilidad y aprovechamiento del almacenamiento. La versión estable más
+reciente es Hadoop 3.5.0.
+
+\subsection{Arquitectura}
+
+Hadoop utiliza una arquitectura distribuida de tipo maestro-trabajador. Cada
+computadora del clúster recibe el nombre de nodo.
+
+La arquitectura puede entenderse mediante tres partes principales:
+
+\begin{enumerate}
+    \item \textbf{Almacenamiento con HDFS:} la información se divide en bloques
+    y se distribuye entre diferentes DataNodes. El NameNode mantiene el registro
+    de la ubicación de cada bloque.
+    
+    \item \textbf{Administración con YARN:} el ResourceManager distribuye los
+    recursos del clúster, mientras que los NodeManagers controlan los recursos
+    disponibles en cada computadora.
+    
+    \item \textbf{Procesamiento con MapReduce:} los trabajos se dividen en
+    tareas pequeñas que pueden ejecutarse de forma paralela.
+\end{enumerate}
+
+En instalaciones de alta disponibilidad pueden existir NameNodes y
+ResourceManagers de respaldo. Si el proceso principal falla, otro puede asumir
+su función.
+
+\subsection{Componentes}
+
+Los cuatro componentes principales de Hadoop son:
+
+\begin{itemize}
+    \item \textbf{Hadoop Common:} contiene las bibliotecas y utilidades
+    compartidas por los demás componentes.
+    
+    \item \textbf{HDFS:} sistema de archivos distribuido que almacena grandes
+    cantidades de datos en varios nodos.
+    
+    \item \textbf{YARN:} administra la memoria, el procesador y los demás
+    recursos disponibles en el clúster.
+    
+    \item \textbf{MapReduce:} modelo de programación para procesar grandes
+    conjuntos de datos de manera paralela.
+\end{itemize}
+
+En HDFS también se encuentran los siguientes procesos:
+
+\begin{itemize}
+    \item \textbf{NameNode:} administra los nombres, directorios y metadatos.
+    \item \textbf{DataNode:} guarda físicamente los bloques de información.
+    \item \textbf{JournalNode:} ayuda a compartir los cambios de metadatos en
+    configuraciones de alta disponibilidad.
+\end{itemize}
+
+En YARN participan:
+
+\begin{itemize}
+    \item \textbf{ResourceManager:} distribuye los recursos del clúster.
+    \item \textbf{NodeManager:} controla los recursos de cada nodo.
+    \item \textbf{ApplicationMaster:} coordina la ejecución de una aplicación.
+    \item \textbf{Container:} representa los recursos asignados a una tarea.
+\end{itemize}
+
+\subsection{Herramientas y servicios}
+
+Hadoop puede complementarse con diferentes herramientas:
+
+\begin{itemize}
+    \item \textbf{Apache Hive:} permite consultar datos mediante un lenguaje
+    parecido a SQL.
+    
+    \item \textbf{Apache HBase:} base de datos NoSQL distribuida que utiliza
+    HDFS como almacenamiento.
+    
+    \item \textbf{Apache Pig:} facilita la creación de procesos de
+    transformación de datos.
+    
+    \item \textbf{Apache Spark:} permite ejecutar procesos analíticos sobre
+    HDFS y utilizar los recursos de YARN.
+    
+    \item \textbf{Apache Oozie:} programa y coordina trabajos de Hadoop.
+    
+    \item \textbf{Apache ZooKeeper:} coordina aplicaciones distribuidas.
+    
+    \item \textbf{DistCp:} copia grandes cantidades de información entre
+    clústeres y sistemas de archivos.
+    
+    \item \textbf{Hadoop Streaming:} permite escribir tareas MapReduce con
+    lenguajes distintos de Java.
+\end{itemize}
+
+\subsection{Modelo de trabajo}
+
+El modelo tradicional de trabajo de Hadoop es el procesamiento por lotes.
+Primero se reúne una cantidad de datos, después se procesa y finalmente se
+guarda el resultado.
+
+Un trabajo MapReduce se desarrolla de la siguiente manera:
+
+\begin{enumerate}
+    \item Los datos de entrada se almacenan en HDFS.
+    \item La información se divide en bloques.
+    \item YARN asigna memoria y procesador a las tareas.
+    \item Las tareas \textit{Map} leen y transforman los datos.
+    \item Los resultados se agrupan y ordenan en la etapa
+    \textit{shuffle and sort}.
+    \item Las tareas \textit{Reduce} combinan los resultados.
+    \item La información final se escribe nuevamente en HDFS.
+\end{enumerate}
+
+Este modelo es adecuado para procesar mucha información, pero normalmente no
+produce respuestas inmediatas.
+
+\subsection{Integración}
+
+Hadoop puede integrarse con bases de datos, herramientas analíticas y
+servicios en la nube. HDFS puede trabajar con Hive, HBase, Spark, Flink y otras
+tecnologías del ecosistema Apache.
+
+También existen conectores para sistemas de almacenamiento como Amazon S3,
+Azure Blob Storage y Azure Data Lake Storage. Los resultados pueden enviarse a
+bases de datos, aplicaciones empresariales o plataformas de visualización.
+
+\subsection{Hardware y software}
+
+Hadoop está escrito principalmente en Java y normalmente se instala en
+servidores con sistemas operativos Linux o similares a Unix. Para realizar
+pruebas puede ejecutarse en una sola computadora, pero en producción se
+utiliza un clúster con varios nodos.
+
+Los nodos trabajadores necesitan:
+
+\begin{itemize}
+    \item Procesadores con varios núcleos.
+    \item Memoria RAM suficiente para ejecutar tareas.
+    \item Discos de gran capacidad.
+    \item Una conexión de red rápida y estable.
+\end{itemize}
+
+El NameNode necesita suficiente memoria porque conserva los metadatos del
+sistema de archivos. Para instalaciones grandes se recomienda utilizar
+servidores de respaldo, redes redundantes y varios discos por nodo.
+
+\subsection{Seguridad}
+
+Hadoop puede utilizar Kerberos para comprobar la identidad de usuarios y
+servicios. HDFS también maneja propietarios, grupos, permisos y listas de
+control de acceso.
+
+Entre sus mecanismos de seguridad se encuentran:
+
+\begin{itemize}
+    \item Autenticación mediante Kerberos.
+    \item Permisos para archivos y directorios de HDFS.
+    \item Tokens de delegación para aplicaciones.
+    \item Cifrado de información almacenada.
+    \item Cifrado de la comunicación entre nodos.
+    \item Uso de HTTPS en las interfaces web.
+    \item Hadoop KMS para administrar claves de cifrado.
+    \item Separación de cuentas para HDFS, YARN y MapReduce.
+\end{itemize}
+
+Estas funciones deben configurarse correctamente. Una instalación básica de
+Hadoop no debe exponerse directamente a Internet.
+
+\subsection{Costos}
+
+Apache Hadoop se distribuye bajo la licencia Apache 2.0, por lo que no requiere
+el pago de una licencia para utilizar su código. Sin embargo, implementar un
+clúster sí genera costos.
+
+Los principales gastos son:
+
+\begin{itemize}
+    \item Compra o renta de servidores.
+    \item Discos para guardar los datos y sus copias.
+    \item Consumo de electricidad y refrigeración.
+    \item Redes y equipos de respaldo.
+    \item Personal para instalar, asegurar y administrar el clúster.
+    \item Soporte o distribuciones comerciales.
+    \item Servicios de nube cuando el clúster es rentado.
+\end{itemize}
+
+El costo final depende de la cantidad de datos, el número de nodos y el tiempo
+que permanezcan activos.
+
+\subsection{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item Es software de código abierto.
+    \item Puede almacenar cantidades muy grandes de información.
+    \item Permite aumentar la capacidad agregando más nodos.
+    \item Tolera fallas de discos y computadoras.
+    \item Tiene un ecosistema amplio de herramientas.
+    \item Es adecuado para procesamiento histórico por lotes.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item Su instalación y administración pueden ser complicadas.
+    \item MapReduce puede ser lento para consultas interactivas.
+    \item La replicación de datos consume espacio adicional.
+    \item Requiere personal con conocimientos especializados.
+    \item No es la mejor opción para respuestas en tiempo real.
+    \item Los archivos pequeños pueden generar problemas en el NameNode.
+\end{itemize}
+
+\subsection{Casos de uso}
+
+Hadoop puede utilizarse en los siguientes casos:
+
+\begin{itemize}
+    \item Almacenamiento de registros de aplicaciones.
+    \item Construcción de lagos de datos.
+    \item Análisis histórico de ventas.
+    \item Procesamiento de documentos, imágenes y archivos.
+    \item Creación de índices para motores de búsqueda.
+    \item Preparación de datos para modelos de aprendizaje automático.
+    \item Análisis de información producida por sensores.
+    \item Copias y conservación de grandes conjuntos de datos.
+\end{itemize}
+
+\subsection{Caso de éxito}
+
+Yahoo fue una de las primeras organizaciones que utilizó Hadoop a gran escala.
+En 2012, la Apache Software Foundation informó que su infraestructura Hadoop
+contaba con más de 42,000 nodos. La plataforma procesaba información
+relacionada con búsquedas, publicidad y personalización del contenido para
+cientos de millones de usuarios.
+
+Este caso ayudó a demostrar que Hadoop podía utilizarse para almacenar y
+procesar grandes volúmenes de información en ambientes reales.
+
+\subsection{Video de ejemplo}
+
+El siguiente video explica de forma sencilla qué es Apache Hadoop, sus
+componentes y algunos casos de uso:
+
+\url{https://www.youtube.com/watch?v=JWX5Inb--ig}
+
+
+\section{Apache Flink}
+
+\subsection{Descripción}
+
+Apache Flink es un framework y motor distribuido para procesar flujos de datos.
+Puede trabajar con flujos ilimitados que reciben información continuamente y
+con conjuntos de datos limitados que ya se encuentran almacenados.
+
+Su principal especialidad es el procesamiento en tiempo real. Flink puede
+analizar cada evento mientras se produce, conservar el estado de una
+aplicación y generar resultados con baja latencia.
+
+\subsection{Características}
+
+Las principales características de Flink son:
+
+\begin{itemize}
+    \item Procesamiento de datos en tiempo real.
+    \item Compatibilidad con flujos limitados e ilimitados.
+    \item Procesamiento con estado.
+    \item Manejo de tiempo de evento y marcas de agua.
+    \item Procesamiento paralelo y distribuido.
+    \item Baja latencia y alto rendimiento.
+    \item Recuperación mediante checkpoints.
+    \item Garantías de procesamiento exactamente una vez.
+    \item APIs para Java, Python, SQL y Table API.
+    \item Integración con diferentes sistemas de almacenamiento y mensajería.
+\end{itemize}
+
+\subsection{Antecedentes e historia}
+
+Flink tiene su origen en el proyecto de investigación Stratosphere, iniciado
+en 2009 en la Universidad Técnica de Berlín y otras instituciones europeas.
+
+En 2014, el proyecto ingresó a la Apache Software Foundation y cambió su nombre
+a Apache Flink. En diciembre del mismo año fue aprobado como proyecto de nivel
+superior de Apache, y el anuncio oficial se realizó en enero de 2015.
+
+Con el paso del tiempo, Flink evolucionó para convertirse en una plataforma
+especializada en procesamiento continuo, SQL, análisis por lotes y
+aplicaciones dirigidas por eventos. La versión estable más reciente es Apache
+Flink 2.3.0.
+
+\subsection{Arquitectura}
+
+Flink utiliza una arquitectura maestro-trabajador. Sus dos procesos
+principales son el JobManager y los TaskManagers.
+
+\begin{itemize}
+    \item \textbf{JobManager:} coordina la ejecución de los programas,
+    distribuye tareas y administra la recuperación.
+    
+    \item \textbf{TaskManager:} ejecuta las tareas y procesa los datos.
+    
+    \item \textbf{Task Slots:} representan las unidades de recursos que un
+    TaskManager puede asignar a las tareas.
+\end{itemize}
+
+El JobManager contiene otros componentes:
+
+\begin{itemize}
+    \item \textbf{ResourceManager:} administra los recursos y task slots.
+    \item \textbf{Dispatcher:} recibe las aplicaciones y proporciona la
+    interfaz web.
+    \item \textbf{JobMaster:} coordina la ejecución de un trabajo específico.
+\end{itemize}
+
+Una aplicación puede ejecutarse en un clúster compartido de sesión o en un
+clúster dedicado. Flink también puede trabajar de forma independiente o sobre
+YARN y Kubernetes.
+
+\subsection{Componentes}
+
+Los componentes principales de Apache Flink son:
+
+\begin{itemize}
+    \item \textbf{Flink Runtime:} motor que ejecuta las tareas distribuidas.
+    
+    \item \textbf{DataStream API:} permite crear aplicaciones de procesamiento
+    continuo.
+    
+    \item \textbf{Table API:} ofrece operaciones sobre datos organizados como
+    tablas.
+    
+    \item \textbf{Flink SQL:} permite consultar flujos y datos almacenados con
+    instrucciones SQL.
+    
+    \item \textbf{State Backends:} almacenan el estado de las aplicaciones.
+    
+    \item \textbf{Checkpoints:} guardan copias automáticas del estado para
+    recuperar una aplicación.
+    
+    \item \textbf{Savepoints:} permiten detener, actualizar o mover una
+    aplicación conservando su estado.
+    
+    \item \textbf{Connectors:} comunican Flink con fuentes y destinos externos.
+    
+    \item \textbf{CEP:} biblioteca para detectar patrones complejos de eventos.
+\end{itemize}
+
+\subsection{Herramientas y servicios}
+
+Flink ofrece diferentes herramientas para desarrollar y operar aplicaciones:
+
+\begin{itemize}
+    \item \textbf{Flink SQL Client:} ejecuta consultas SQL sobre datos.
+    \item \textbf{Web Dashboard:} muestra trabajos, tareas, recursos y errores.
+    \item \textbf{Command Line Interface:} permite enviar y administrar trabajos.
+    \item \textbf{REST API:} facilita la administración mediante aplicaciones.
+    \item \textbf{Flink CDC:} captura cambios realizados en bases de datos.
+    \item \textbf{Flink Kubernetes Operator:} administra aplicaciones de Flink
+    en Kubernetes.
+    \item \textbf{PyFlink:} permite desarrollar aplicaciones utilizando Python.
+\end{itemize}
+
+También existen servicios administrados, como Amazon Managed Service for
+Apache Flink y ofertas comerciales basadas en Flink.
+
+\subsection{Modelo de trabajo}
+
+Flink representa una aplicación mediante un flujo de datos formado por
+fuentes, transformaciones y destinos.
+
+El proceso general es el siguiente:
+
+\begin{enumerate}
+    \item Una fuente recibe información desde Kafka, archivos, sensores o bases
+    de datos.
+    
+    \item Los eventos se distribuyen entre operadores paralelos.
+    
+    \item Los operadores filtran, agrupan, relacionan o transforman la
+    información.
+    
+    \item La aplicación conserva el estado necesario para procesar eventos
+    posteriores.
+    
+    \item Los checkpoints guardan copias del estado.
+    
+    \item Los resultados se envían a una base de datos, otro flujo, un archivo
+    o un tablero.
+\end{enumerate}
+
+Flink puede procesar eventos usando el momento en que fueron creados, conocido
+como tiempo de evento. Las marcas de agua ayudan a manejar eventos que llegan
+con retraso.
+
+\subsection{Integración}
+
+Flink cuenta con conectores para sistemas como:
+
+\begin{itemize}
+    \item Apache Kafka y Apache Pulsar.
+    \item Amazon Kinesis y Google Cloud Pub/Sub.
+    \item RabbitMQ.
+    \item HDFS y sistemas de archivos.
+    \item Apache Hive y Apache HBase.
+    \item Cassandra y MongoDB.
+    \item Elasticsearch y OpenSearch.
+    \item Bases de datos compatibles con JDBC.
+    \item Amazon S3 y otros almacenamientos de objetos.
+\end{itemize}
+
+También puede ejecutarse sobre Hadoop YARN, Kubernetes, Docker o un clúster
+independiente. Los formatos compatibles incluyen CSV, JSON, Avro, Parquet,
+ORC y Protobuf.
+
+\subsection{Hardware y software}
+
+Flink puede instalarse en una computadora para realizar pruebas o en un
+clúster para trabajar en producción. La versión 2.3 admite Java 11, 17 o 21.
+PyFlink también requiere Python 3.9 o una versión compatible posterior.
+
+El hardware depende de la cantidad y velocidad de los eventos. Generalmente
+se necesita:
+
+\begin{itemize}
+    \item Procesadores con varios núcleos.
+    \item Memoria RAM para mantener el estado.
+    \item Almacenamiento para checkpoints y savepoints.
+    \item Una red rápida entre TaskManagers.
+    \item Nodos de respaldo para alta disponibilidad.
+\end{itemize}
+
+Para aplicaciones pequeñas puede utilizarse Docker. Las aplicaciones de gran
+escala suelen desplegarse en Kubernetes, YARN o servicios cloud.
+
+\subsection{Seguridad}
+
+Flink puede proteger sus comunicaciones internas y externas mediante TLS o
+SSL. También puede autenticarse con sistemas externos utilizando Kerberos y
+tokens de delegación.
+
+Sus medidas de seguridad incluyen:
+
+\begin{itemize}
+    \item Cifrado de la comunicación entre JobManager y TaskManagers.
+    \item Protección de la interfaz REST mediante HTTPS.
+    \item Autenticación mutua con certificados.
+    \item Integración con Kerberos.
+    \item Tokens para acceder a HDFS, Kafka y otros servicios.
+    \item Uso de proxies como NGINX o Envoy para proteger la interfaz REST.
+    \item Permisos y controles proporcionados por Kubernetes o YARN.
+\end{itemize}
+
+Varias opciones de seguridad no se encuentran activadas en una instalación
+básica, por lo que deben configurarse antes de utilizar Flink en producción.
+
+\subsection{Costos}
+
+Apache Flink también utiliza la licencia Apache 2.0 y puede descargarse sin
+pagar una licencia. Los costos aparecen al proporcionar la infraestructura
+necesaria.
+
+Los gastos principales son:
+
+\begin{itemize}
+    \item Servidores o máquinas virtuales.
+    \item Memoria para mantener el estado.
+    \item Almacenamiento para checkpoints.
+    \item Transferencia de datos por la red.
+    \item Administración y supervisión de las aplicaciones.
+    \item Servicios administrados contratados con un proveedor cloud.
+\end{itemize}
+
+Un clúster compartido puede aprovechar mejor los recursos, mientras que un
+clúster dedicado ofrece más aislamiento. La configuración debe ajustarse para
+evitar mantener recursos sin utilizar.
+
+\subsection{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item Procesa información con baja latencia.
+    \item Trabaja con datos continuos y datos por lotes.
+    \item Proporciona manejo avanzado del estado.
+    \item Cuenta con recuperación automática mediante checkpoints.
+    \item Ofrece APIs de diferentes niveles.
+    \item Se integra con Kafka, Hadoop, bases de datos y servicios cloud.
+    \item Puede escalar a una gran cantidad de procesadores y datos.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item Su configuración puede ser complicada.
+    \item Las aplicaciones con mucho estado requieren bastante memoria.
+    \item Es necesario comprender conceptos como tiempo de evento y marcas de
+    agua.
+    \item Los checkpoints pueden consumir almacenamiento.
+    \item La supervisión de aplicaciones continuas requiere personal
+    especializado.
+    \item Los conectores deben ser compatibles con la versión instalada.
+\end{itemize}
+
+\subsection{Casos de uso}
+
+Apache Flink puede emplearse en:
+
+\begin{itemize}
+    \item Detección de fraudes en tiempo real.
+    \item Seguimiento de transacciones financieras.
+    \item Procesamiento de sensores y dispositivos IoT.
+    \item Recomendaciones de productos o contenido.
+    \item Supervisión de redes y aplicaciones.
+    \item Detección de comportamientos anormales.
+    \item Procesos ETL continuos.
+    \item Actualización de índices de búsqueda.
+    \item Análisis de registros y eventos.
+    \item Procesamiento por lotes de información histórica.
+\end{itemize}
+
+\subsection{Caso de éxito}
+
+Alibaba utiliza una versión de Flink llamada Blink para procesar información
+en tiempo real. La empresa analiza búsquedas, clics y actividad de los usuarios
+para mejorar la clasificación de productos y generar recomendaciones.
+
+Este caso demuestra que Flink puede procesar flujos de gran tamaño y producir
+resultados rápidamente en una plataforma de comercio electrónico.
+
+\subsection{Video de ejemplo}
+
+El siguiente video explica el funcionamiento de Apache Flink y su integración
+con plataformas de eventos como Apache Kafka:
+
+\url{https://www.youtube.com/watch?v=X1bhZZgAlCI}
+
+
+\section{Comparación entre Hadoop y Flink}
+
+\begin{itemize}
+    \item \textbf{Tipo de procesamiento:} Hadoop se enfoca principalmente en
+    lotes, mientras que Flink se especializa en flujos continuos.
+    
+    \item \textbf{Velocidad:} Hadoop puede tardar minutos u horas en completar
+    un trabajo. Flink puede entregar resultados en segundos o milisegundos.
+    
+    \item \textbf{Almacenamiento:} Hadoop incluye HDFS. Flink necesita utilizar
+    un sistema externo para guardar permanentemente los datos.
+    
+    \item \textbf{Estado:} Flink cuenta con herramientas avanzadas para
+    conservar el estado de aplicaciones continuas.
+    
+    \item \textbf{Recuperación:} Hadoop repite las tareas que fallan. Flink
+    recupera el estado mediante checkpoints.
+    
+    \item \textbf{Uso recomendado:} Hadoop resulta adecuado para información
+    histórica y lagos de datos. Flink es conveniente para alertas, monitoreo y
+    análisis en tiempo real.
+\end{itemize}
+
+Los dos frameworks pueden complementarse. Por ejemplo, Hadoop puede almacenar
+la información histórica en HDFS y Flink puede leerla junto con eventos en
+tiempo real.
+
+\section{Conclusión}
+
+Apache Hadoop y Apache Flink son herramientas importantes en el procesamiento
+de Big Data. Hadoop proporciona almacenamiento distribuido y procesamiento
+por lotes confiable. Flink ofrece procesamiento continuo, baja latencia y
+manejo avanzado del estado.
+
+La elección depende del problema que se desea resolver. Hadoop es apropiado
+cuando se necesita conservar y procesar grandes cantidades de información
+histórica. Flink es una mejor alternativa cuando los datos deben analizarse
+mientras se producen. En algunas arquitecturas se pueden utilizar ambos para
+combinar análisis histórico y procesamiento en tiempo real.

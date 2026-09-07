@@ -1,0 +1,272 @@
+% !TeX root = ../../main.tex
+
+\section{Introducción}
+
+Una Arquitectura de Big Data establece cómo se recopilan, almacenan,
+procesan, protegen y analizan grandes cantidades de datos. Su diseño permite
+trabajar con información proveniente de diferentes fuentes y obtener
+resultados útiles para apoyar la toma de decisiones.
+
+\section{Definición y propósito}
+
+La Arquitectura de Big Data es el diseño general de los componentes,
+tecnologías y procesos utilizados para administrar grandes cantidades de
+datos. Su propósito fundamental es procesar información que presenta un gran
+volumen, variedad y velocidad.
+
+A diferencia de una arquitectura tradicional, normalmente diseñada para datos
+estructurados y cargas relativamente predecibles, una arquitectura de Big
+Data puede trabajar con datos estructurados, semiestructurados y no
+estructurados. Además, distribuye el almacenamiento y el procesamiento entre
+varios equipos, lo que facilita aumentar su capacidad.
+
+\section{Componentes esenciales}
+
+Los componentes principales de una Arquitectura de Big Data son los
+siguientes:
+
+\begin{enumerate}
+    \item \textbf{Fuentes de datos:} generan la información que será
+    procesada. Algunos ejemplos son bases de datos, redes sociales,
+    aplicaciones, sensores, archivos y registros de actividad.
+
+    \item \textbf{Ingesta e integración:} recibe los datos y los transporta
+    hacia la plataforma. Puede trabajar por lotes o en tiempo real.
+    Apache Kafka y Apache NiFi son ejemplos de herramientas de ingesta.
+
+    \item \textbf{Almacenamiento:} conserva los datos de manera distribuida.
+    Se pueden utilizar sistemas como HDFS, bases de datos NoSQL, Data Lakes
+    y Data Warehouses.
+
+    \item \textbf{Procesamiento:} limpia, transforma y combina los datos.
+    Puede realizarse por lotes con Hadoop o mediante procesamiento en tiempo
+    real con Spark y Flink.
+
+    \item \textbf{Análisis:} aplica consultas, estadísticas o modelos de
+    aprendizaje automático para encontrar patrones y generar conocimiento.
+
+    \item \textbf{Presentación:} muestra los resultados mediante informes,
+    gráficas y tableros para facilitar su interpretación.
+
+    \item \textbf{Gobernanza y seguridad:} establece reglas sobre la calidad,
+    propiedad, acceso, protección y conservación de los datos.
+\end{enumerate}
+
+\section{Arquitectura Lambda}
+
+La Arquitectura Lambda combina el procesamiento por lotes con el
+procesamiento en tiempo real. Su objetivo es ofrecer resultados rápidos sin
+perder la precisión que se obtiene al analizar todos los datos históricos.
+
+Está formada por tres capas:
+
+\begin{itemize}
+    \item \textbf{Capa Batch:} conserva el conjunto histórico de datos y lo
+    procesa periódicamente. Genera resultados completos y precisos, aunque
+    requiere más tiempo.
+
+    \item \textbf{Capa Speed:} procesa los datos recientes conforme llegan.
+    Su función es producir resultados con poca demora mientras la capa Batch
+    termina su procesamiento.
+
+    \item \textbf{Capa Serving:} almacena y presenta los resultados generados
+    por las otras capas para que puedan ser consultados por aplicaciones y
+    usuarios.
+\end{itemize}
+
+Un caso de uso es la detección de fraude bancario. La capa Speed puede revisar
+una transacción en el momento en que ocurre, mientras que la capa Batch
+analiza el historial completo del cliente. La capa Serving permite consultar
+ambos resultados para decidir si la transacción parece sospechosa.
+
+\section{Arquitectura Lambda y Arquitectura Kappa}
+
+La Arquitectura Kappa utiliza una sola ruta de procesamiento basada en flujos
+de eventos. Los datos históricos pueden volver a procesarse reproduciendo los
+eventos almacenados. Esto evita mantener una ruta Batch y otra de tiempo real.
+
+\begin{center}
+    \renewcommand{\arraystretch}{1.4}
+    \small
+
+    \begin{tabularx}{\textwidth}{|p{2.7cm}|X|X|}
+        \hline
+        \textbf{Aspecto} &
+        \textbf{Arquitectura Lambda} &
+        \textbf{Arquitectura Kappa} \\
+        \hline
+
+        Procesamiento &
+        Utiliza procesamiento por lotes y en tiempo real. &
+        Utiliza una sola ruta de procesamiento de eventos. \\
+        \hline
+
+        Capas &
+        Tiene las capas Batch, Speed y Serving. &
+        Se concentra en la ingesta, procesamiento y consulta de flujos. \\
+        \hline
+
+        Complejidad &
+        Es más compleja porque mantiene dos formas de procesamiento. &
+        Es más sencilla porque mantiene una sola forma de procesamiento. \\
+        \hline
+
+        Datos históricos &
+        Se vuelven a calcular mediante la capa Batch. &
+        Se procesan nuevamente reproduciendo el flujo de eventos. \\
+        \hline
+
+        Uso recomendado &
+        Sistemas que necesitan combinar resultados históricos precisos con
+        información reciente. &
+        Sistemas donde predominan los eventos y las respuestas en tiempo
+        real. \\
+        \hline
+    \end{tabularx}
+\end{center}
+
+Lambda es adecuada cuando se requieren análisis históricos completos y
+resultados inmediatos. Kappa es conveniente en aplicaciones orientadas a
+eventos, como monitoreo de sensores, actividad de usuarios o transacciones
+en tiempo real.
+
+\section{Arquitectura de Data Lake}
+
+Un Data Lake es un repositorio que almacena grandes cantidades de datos en su
+formato original. Puede contener datos estructurados, como tablas;
+semiestructurados, como archivos JSON o XML; y no estructurados, como
+imágenes, videos, audios y documentos.
+
+Una característica importante es el esquema en lectura. Esto significa que
+los datos se organizan cuando van a utilizarse, en lugar de definir toda su
+estructura antes de almacenarlos.
+
+\subsection{Ventajas}
+
+\begin{itemize}
+    \item Permite almacenar diferentes tipos de datos.
+    \item Puede crecer conforme aumenta la cantidad de información.
+    \item Conserva los datos originales para futuros análisis.
+    \item Facilita proyectos de análisis y aprendizaje automático.
+    \item Puede utilizar almacenamiento distribuido de bajo costo.
+\end{itemize}
+
+\subsection{Desafíos}
+
+\begin{itemize}
+    \item Mantener la calidad y organización de los datos.
+    \item Crear un catálogo para localizar la información.
+    \item Controlar el acceso a datos sensibles.
+    \item Evitar que el repositorio se convierta en un conjunto desordenado
+    conocido como \textit{data swamp}.
+\end{itemize}
+
+\section{Herramientas y técnicas de Big Data}
+
+Las herramientas y técnicas pueden clasificarse en cuatro categorías
+principales:
+
+\begin{enumerate}
+    \item \textbf{Procesamiento masivamente paralelo:} divide una tarea entre
+    varios procesadores para ejecutarla al mismo tiempo. Algunos ejemplos son
+    Teradata, Greenplum y Amazon Redshift.
+
+    \item \textbf{Bases de datos NoSQL:} almacenan datos que no siempre
+    requieren una estructura relacional fija. Algunos ejemplos son MongoDB,
+    Apache Cassandra y Apache HBase.
+
+    \item \textbf{Almacenamiento y procesamiento distribuido:} reparte los
+    datos y el trabajo entre varios nodos. Algunos ejemplos son Apache Hadoop,
+    HDFS, Apache Spark y Apache Flink.
+
+    \item \textbf{Computación en la nube:} proporciona almacenamiento y
+    procesamiento que puede aumentar o disminuir según la demanda. Algunos
+    ejemplos son Amazon Web Services, Microsoft Azure y Google Cloud.
+\end{enumerate}
+
+\section{Beneficios}
+
+Tres beneficios importantes de implementar una Arquitectura de Big Data son:
+
+\begin{enumerate}
+    \item \textbf{Escalabilidad:} permite agregar recursos cuando aumenta la
+    cantidad de datos o el trabajo de procesamiento.
+
+    \item \textbf{Mayor velocidad de procesamiento:} distribuye las tareas
+    entre varios nodos, lo que permite analizar grandes cantidades de
+    información en menos tiempo.
+
+    \item \textbf{Mejores decisiones:} ayuda a identificar tendencias,
+    riesgos y oportunidades mediante información obtenida de los datos.
+\end{enumerate}
+
+También ofrece flexibilidad para combinar diferentes herramientas y puede
+mejorar la disponibilidad mediante la distribución y réplica de los datos.
+
+\section{Desafíos de implementación}
+
+Tres desafíos comunes son:
+
+\begin{enumerate}
+    \item \textbf{Complejidad técnica:} integrar y mantener diferentes
+    herramientas requiere personal capacitado y una planeación adecuada.
+
+    \item \textbf{Calidad de los datos:} la información puede contener
+    errores, duplicados o formatos distintos. Es necesario establecer
+    procesos de limpieza y validación.
+
+    \item \textbf{Seguridad y privacidad:} almacenar grandes cantidades de
+    información aumenta el riesgo de accesos no autorizados y filtraciones.
+    Por ello deben utilizarse controles de acceso, cifrado y monitoreo.
+\end{enumerate}
+
+\section{Casos de uso}
+
+La Arquitectura de Big Data se utiliza para transformar grandes cantidades de
+información en resultados útiles. Algunos casos de uso importantes son:
+
+\begin{itemize}
+    \item \textbf{Detección de fraude:} analiza transacciones en tiempo real
+    para identificar comportamientos sospechosos.
+
+    \item \textbf{Sistemas de recomendación:} estudia el comportamiento de
+    los usuarios para sugerir productos, películas o servicios.
+
+    \item \textbf{Mantenimiento predictivo:} procesa información de sensores
+    para detectar posibles fallas en máquinas y equipos.
+
+    \item \textbf{Análisis comercial:} combina ventas, inventarios y
+    comportamiento de clientes para mejorar las decisiones de una empresa.
+\end{itemize}
+
+\section{Gobernanza, privacidad y seguridad}
+
+La gobernanza de datos define quién es responsable de la información, quién
+puede utilizarla y bajo qué condiciones. También establece normas para
+mantener la calidad, clasificación, trazabilidad y conservación de los datos.
+
+Las medidas de protección esenciales incluyen:
+
+\begin{itemize}
+    \item Cifrado de los datos almacenados y transmitidos.
+    \item Autenticación de usuarios y control de acceso por roles.
+    \item Aplicación del principio de menor privilegio.
+    \item Enmascaramiento o anonimización de información personal.
+    \item Registro y auditoría de las actividades realizadas.
+    \item Monitoreo para detectar accesos o comportamientos sospechosos.
+    \item Copias de seguridad y planes de recuperación.
+    \item Políticas para conservar y eliminar datos cuando corresponda.
+\end{itemize}
+
+Estas medidas permiten reducir riesgos, proteger la privacidad y cumplir las
+normas aplicables al uso de la información.
+
+\section{Conclusión}
+
+Una Arquitectura de Big Data permite administrar datos que superan las
+capacidades de muchas soluciones tradicionales. Sus componentes se encargan
+de recibir, almacenar, procesar, analizar y proteger la información.
+Arquitecturas como Lambda, Kappa y Data Lake ofrecen alternativas para
+diferentes necesidades. La elección debe considerar el tipo de datos, la
+velocidad requerida, el costo, la seguridad y los objetivos de la
+organización.

@@ -1,0 +1,303 @@
+% !TeX root = ../../main.tex
+
+\section{Introducción}
+
+Apache Hadoop es una plataforma creada para almacenar y procesar grandes
+cantidades de datos mediante grupos de computadoras. Su funcionamiento
+distribuido permite dividir el almacenamiento y el procesamiento entre varios
+equipos, conocidos como nodos.
+
+\section{¿Qué es Apache Hadoop?}
+
+Apache Hadoop es un framework de código abierto utilizado para almacenar y
+procesar grandes volúmenes de datos de manera distribuida. En lugar de depender
+de una sola computadora, Hadoop utiliza un conjunto de máquinas conectadas que
+forman un clúster.
+
+Hadoop puede trabajar con datos estructurados, semiestructurados y no
+estructurados. También permite ejecutar tareas en paralelo, lo que facilita
+el procesamiento de conjuntos de datos de gran tamaño.
+
+\section{Historia de Apache Hadoop}
+
+El origen de Hadoop está relacionado con Nutch, un motor de búsqueda de código
+abierto desarrollado por Doug Cutting y Mike Cafarella. Conforme aumentó la
+cantidad de información de Internet, fue necesario encontrar una manera de
+almacenar y procesar los datos entre varias computadoras.
+
+Su desarrollo tomó como inspiración dos trabajos publicados por Google: Google
+File System, en 2003, y MapReduce, en 2004. Estas ideas permitían distribuir
+el almacenamiento y el procesamiento de datos.
+
+En 2005 se implementaron MapReduce y un sistema de archivos distribuido en
+Nutch. Posteriormente, Doug Cutting se incorporó a Yahoo!, donde continuó el
+desarrollo del proyecto. Hadoop se convirtió en un proyecto de Apache y fue
+adoptado por diferentes empresas. Hadoop 1.0 apareció en 2011, Hadoop 2 en
+2013 y Hadoop 3.0 en 2017.
+
+\section{Características principales}
+
+Las características principales de Apache Hadoop son:
+
+\begin{itemize}
+    \item \textbf{Procesamiento distribuido:} divide una tarea entre varios
+    nodos del clúster.
+
+    \item \textbf{Escalabilidad:} permite agregar nuevos nodos cuando aumenta
+    la cantidad de datos.
+
+    \item \textbf{Tolerancia a fallos:} mantiene copias de los bloques de datos
+    para evitar pérdidas cuando un nodo deja de funcionar.
+
+    \item \textbf{Procesamiento paralelo:} varios nodos pueden trabajar al
+    mismo tiempo sobre diferentes partes de un conjunto de datos.
+
+    \item \textbf{Uso de hardware convencional:} puede utilizar computadoras
+    de costo moderado en lugar de depender exclusivamente de servidores
+    especializados.
+
+    \item \textbf{Flexibilidad:} permite almacenar diferentes formatos de
+    información.
+
+    \item \textbf{Alta disponibilidad:} los datos replicados pueden recuperarse
+    desde otros nodos.
+
+    \item \textbf{Código abierto:} puede utilizarse, estudiarse y modificarse
+    libremente.
+\end{itemize}
+
+\section{Módulos principales}
+
+Apache Hadoop contiene cuatro módulos principales:
+
+\begin{enumerate}
+    \item \textbf{Hadoop Common:} contiene las bibliotecas y herramientas
+    generales que necesitan los demás módulos.
+
+    \item \textbf{HDFS:} es el sistema de archivos distribuido de Hadoop.
+    Divide los archivos en bloques y los almacena en diferentes nodos.
+
+    \item \textbf{YARN:} administra los recursos del clúster y programa la
+    ejecución de las aplicaciones.
+
+    \item \textbf{MapReduce:} es el modelo de procesamiento que divide los
+    trabajos en tareas pequeñas y las ejecuta en paralelo.
+\end{enumerate}
+
+\section{Arquitectura de Apache Hadoop}
+
+Hadoop utiliza una arquitectura distribuida de tipo maestro-trabajador. Sus
+funciones principales se encuentran en las capas de almacenamiento y
+procesamiento.
+
+\subsection{Arquitectura de HDFS}
+
+La arquitectura de HDFS está formada principalmente por:
+
+\begin{itemize}
+    \item \textbf{NameNode:} es el nodo principal. Conserva los metadatos del
+    sistema, como los nombres de archivos, permisos y ubicación de los bloques.
+
+    \item \textbf{DataNodes:} son los nodos trabajadores. Almacenan físicamente
+    los bloques de datos y envían información sobre su estado al NameNode.
+
+    \item \textbf{Cliente HDFS:} solicita operaciones para leer, escribir o
+    eliminar archivos.
+\end{itemize}
+
+Los archivos se dividen en bloques que se distribuyen entre los DataNodes.
+Cada bloque puede tener varias copias para mantener la información disponible
+si ocurre una falla.
+
+\subsection{Arquitectura de YARN}
+
+YARN administra el procesamiento mediante los siguientes elementos:
+
+\begin{itemize}
+    \item \textbf{ResourceManager:} distribuye los recursos disponibles entre
+    las aplicaciones.
+
+    \item \textbf{NodeManager:} administra los recursos y tareas ejecutadas en
+    cada nodo trabajador.
+
+    \item \textbf{ApplicationMaster:} coordina la ejecución de una aplicación
+    específica.
+
+    \item \textbf{Contenedores:} proporcionan memoria y capacidad de
+    procesamiento para ejecutar las tareas.
+\end{itemize}
+
+\section{¿Cómo trabaja Apache Hadoop?}
+
+El funcionamiento básico de Hadoop puede resumirse en los siguientes pasos:
+
+\begin{enumerate}
+    \item Los datos se cargan en HDFS.
+    \item HDFS divide los archivos en bloques.
+    \item Los bloques se distribuyen y replican entre los DataNodes.
+    \item El usuario envía un trabajo de procesamiento a YARN.
+    \item YARN asigna los recursos y nodos necesarios para ejecutar el trabajo.
+    \item MapReduce divide el trabajo en tareas Map.
+    \item Las tareas Map procesan partes de los datos y generan resultados
+    intermedios.
+    \item Los resultados se ordenan y se envían a las tareas Reduce.
+    \item Las tareas Reduce combinan los resultados.
+    \item El resultado final se almacena nuevamente en HDFS.
+\end{enumerate}
+
+Hadoop procura ejecutar cada tarea cerca del nodo donde se encuentran los
+datos. Esto disminuye la transferencia de información por la red.
+
+\section{Ventajas}
+
+Las principales ventajas de Apache Hadoop son:
+
+\begin{itemize}
+    \item Almacena y procesa grandes cantidades de datos.
+    \item Puede aumentar su capacidad agregando más nodos.
+    \item Distribuye las tareas para ejecutarlas en paralelo.
+    \item Mantiene copias de los datos para enfrentar fallas.
+    \item Puede utilizar hardware convencional.
+    \item Trabaja con diferentes tipos y formatos de datos.
+    \item Cuenta con una comunidad amplia y diversas herramientas relacionadas.
+    \item Permite procesar los datos en el mismo nodo donde están almacenados.
+\end{itemize}
+
+\section{Desventajas}
+
+Apache Hadoop también presenta algunas desventajas:
+
+\begin{itemize}
+    \item MapReduce se orienta principalmente al procesamiento por lotes, por
+    lo que puede tener una latencia alta.
+
+    \item No es la opción más adecuada para transacciones que requieren
+    respuestas inmediatas.
+
+    \item La instalación y administración de un clúster pueden ser complejas.
+
+    \item Requiere conocimientos de sistemas distribuidos, redes y
+    configuración de servidores.
+
+    \item HDFS no trabaja de manera eficiente con una cantidad muy grande de
+    archivos pequeños.
+
+    \item La replicación aumenta el espacio de almacenamiento necesario.
+
+    \item La seguridad y el monitoreo requieren configuración adicional.
+\end{itemize}
+
+\section{Tecnologías y productos relacionados}
+
+El ecosistema de Hadoop contiene distintas herramientas que complementan sus
+funciones:
+
+\begin{itemize}
+    \item \textbf{Apache Hive:} permite consultar datos mediante un lenguaje
+    parecido a SQL.
+
+    \item \textbf{Apache Pig:} utiliza el lenguaje Pig Latin para crear flujos
+    de procesamiento de datos.
+
+    \item \textbf{Apache HBase:} es una base de datos NoSQL que funciona sobre
+    HDFS y permite acceder a registros específicos.
+
+    \item \textbf{Apache Sqoop:} transfiere datos entre Hadoop y bases de datos
+    relacionales.
+
+    \item \textbf{Apache Flume:} recopila y transporta grandes cantidades de
+    registros hacia Hadoop.
+
+    \item \textbf{Apache Oozie:} programa y coordina flujos de trabajos.
+
+    \item \textbf{Apache ZooKeeper:} ayuda a coordinar los servicios
+    distribuidos.
+
+    \item \textbf{Apache Spark:} proporciona procesamiento rápido en memoria,
+    análisis, aprendizaje automático y procesamiento de flujos.
+
+    \item \textbf{Apache Tez:} ofrece un motor alternativo para ejecutar
+    procesos por lotes e interactivos.
+
+    \item \textbf{Apache Ambari:} facilita la instalación, administración y
+    supervisión de clústeres Hadoop.
+
+    \item \textbf{Apache Avro:} proporciona un formato para serializar e
+    intercambiar datos.
+\end{itemize}
+
+\section{Requerimientos de hardware y software}
+
+Los requerimientos exactos dependen del volumen de información y del uso que
+tendrá el clúster.
+
+\subsection{Hardware}
+
+Para una instalación de aprendizaje en una sola computadora se recomienda:
+
+\begin{itemize}
+    \item Procesador de 64 bits con dos o más núcleos.
+    \item Al menos 4 GB de memoria RAM; 8 GB ofrecen una mejor experiencia.
+    \item Entre 20 y 50 GB de almacenamiento disponible.
+    \item Conexión de red cuando se utilicen varias máquinas.
+\end{itemize}
+
+En un ambiente de producción se necesitan varios servidores. Los DataNodes
+deben contar con suficiente almacenamiento, memoria y capacidad de
+procesamiento. También es importante utilizar una red rápida porque los nodos
+intercambian información constantemente.
+
+\subsection{Software}
+
+Los requerimientos de software más comunes son:
+
+\begin{itemize}
+    \item Un sistema operativo Linux de 64 bits.
+    \item Una versión del Java Development Kit compatible con la versión de
+    Hadoop utilizada.
+    \item Servicio SSH configurado para la comunicación entre los nodos.
+    \item Una distribución de Apache Hadoop.
+    \item Variables de entorno como \texttt{JAVA\_HOME} y
+    \texttt{HADOOP\_HOME}.
+    \item Nombres de host y direcciones de red configurados correctamente.
+    \item Archivos de configuración para HDFS, YARN y MapReduce.
+\end{itemize}
+
+Para prácticas personales también puede ejecutarse Hadoop en una máquina
+virtual o mediante contenedores.
+
+\section{Implementación de Hadoop en la nube}
+
+Hadoop puede implementarse en la nube utilizando máquinas virtuales o un
+servicio administrado. Algunos ejemplos de servicios administrados son Amazon
+EMR, Azure HDInsight y Google Cloud Dataproc.
+
+Una implementación general puede realizarse con los siguientes pasos:
+
+\begin{enumerate}
+    \item Elegir el proveedor y la región donde se ejecutará el clúster.
+    \item Seleccionar un servicio administrado o crear máquinas virtuales.
+    \item Configurar la red, usuarios, permisos y reglas de seguridad.
+    \item Seleccionar la cantidad y capacidad de los nodos.
+    \item Crear el clúster e instalar los componentes necesarios.
+    \item Configurar HDFS o conectarlo con el almacenamiento de objetos del
+    proveedor.
+    \item Transferir los datos mediante herramientas de ingesta.
+    \item Ejecutar trabajos con MapReduce, Hive, Spark u otras herramientas.
+    \item Supervisar el rendimiento, consumo y costo del clúster.
+    \item Detener o reducir los recursos cuando ya no sean necesarios.
+\end{enumerate}
+
+Los servicios administrados simplifican la instalación, actualización y
+escalamiento. Sin embargo, es necesario controlar los costos, los permisos de
+acceso y la protección de los datos almacenados.
+
+\section{Conclusión}
+
+Apache Hadoop permite almacenar y procesar grandes cantidades de información
+mediante un clúster de computadoras. HDFS se encarga del almacenamiento
+distribuido, YARN administra los recursos y MapReduce ejecuta las tareas de
+procesamiento. Aunque su administración puede ser compleja y no es la mejor
+opción para todas las aplicaciones en tiempo real, continúa siendo una
+tecnología importante para comprender el procesamiento distribuido y el
+ecosistema de Big Data.

@@ -1,0 +1,576 @@
+% !TeX root = ../../main.tex
+
+\section{Soluciones de Big Data en la nube}
+
+\subsection{Introducción}
+
+Las plataformas de Big Data en la nube permiten almacenar, procesar y
+analizar grandes cantidades de información sin que una organización tenga
+que adquirir toda la infraestructura física. Sus recursos pueden aumentar o
+disminuir de acuerdo con la demanda y normalmente se pagan según el uso.
+
+Los servicios en la nube se pueden clasificar de la siguiente manera:
+
+\begin{itemize}
+    \item \textbf{IaaS:} proporciona servidores, redes y almacenamiento virtual.
+    El cliente administra el sistema operativo y sus aplicaciones.
+    
+    \item \textbf{PaaS:} proporciona una plataforma administrada para desarrollar,
+    procesar o analizar datos sin configurar toda la infraestructura.
+    
+    \item \textbf{SaaS:} ofrece una aplicación terminada a la que se accede
+    normalmente mediante un navegador.
+\end{itemize}
+
+A continuación se presentan las principales soluciones de Big Data ofrecidas
+por AWS, Google Cloud, Microsoft Azure, IBM, Cloudera y Databricks.
+
+\subsection{Amazon Web Services}
+
+\subsubsection*{Descripción y antecedentes}
+
+Amazon Web Services, conocida como AWS, es la plataforma de servicios en la
+nube de Amazon. Comenzó a ofrecer servicios públicos en 2006 y actualmente
+cuenta con herramientas de almacenamiento, procesamiento, bases de datos,
+analítica e inteligencia artificial.
+
+Una de sus principales características es la elasticidad. Una empresa puede
+aumentar sus recursos durante los periodos de mayor actividad y reducirlos
+cuando ya no sean necesarios.
+
+\subsubsection*{Tipos de servicio}
+
+\begin{itemize}
+    \item \textbf{IaaS:} Amazon EC2 proporciona servidores virtuales, mientras
+    que Amazon S3 permite almacenar grandes cantidades de archivos y datos.
+    
+    \item \textbf{PaaS:} incluye servicios administrados como Amazon EMR,
+    Amazon Redshift, AWS Glue, Amazon Athena y Amazon Kinesis.
+    
+    \item \textbf{SaaS:} Amazon QuickSight proporciona análisis y tableros
+    visuales mediante una aplicación web.
+\end{itemize}
+
+\subsubsection*{Herramientas orientadas a Big Data}
+
+\begin{itemize}
+    \item \textbf{Amazon S3:} almacenamiento de objetos que puede utilizarse
+    para construir un lago de datos.
+    
+    \item \textbf{Amazon EMR:} procesa grandes volúmenes de información con
+    tecnologías como Apache Spark y Hadoop.
+    
+    \item \textbf{Amazon Redshift:} almacén de datos utilizado para realizar
+    consultas y análisis empresariales.
+    
+    \item \textbf{AWS Glue:} prepara, transforma e integra información mediante
+    procesos ETL.
+    
+    \item \textbf{Amazon Kinesis:} recibe y analiza datos en tiempo real.
+    
+    \item \textbf{Amazon Athena:} permite consultar archivos almacenados en S3
+    utilizando instrucciones SQL.
+\end{itemize}
+
+\subsubsection*{Precios}
+
+AWS utiliza principalmente el modelo de pago por uso. Cada servicio cobra de
+manera diferente: S3 cobra por almacenamiento, EMR por los recursos de
+procesamiento y Redshift por la capacidad utilizada. Como referencia, Athena
+cobra aproximadamente \$5 dólares por cada TB de datos analizado. Los costos
+pueden variar según la región y la configuración.
+
+\subsubsection*{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item Cuenta con una gran variedad de servicios.
+    \item Permite aumentar o reducir los recursos rápidamente.
+    \item Tiene disponibilidad en numerosas regiones.
+    \item Sus herramientas se integran entre sí.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item Su catálogo puede resultar complicado para usuarios principiantes.
+    \item Una mala configuración puede producir costos elevados.
+    \item Migrar posteriormente a otra plataforma puede ser difícil.
+\end{itemize}
+
+\subsubsection*{Caso de éxito}
+
+Netflix utiliza AWS para distribuir contenido a millones de usuarios y para
+procesar información relacionada con reproducciones, dispositivos y
+preferencias. El análisis de estos datos ayuda a mejorar las recomendaciones
+y a conocer el comportamiento de los usuarios.
+
+\subsubsection*{Video sugerido}
+
+La página oficial del caso de Netflix contiene un video sobre su uso de AWS:
+
+\url{https://aws.amazon.com/solutions/case-studies/netflix-case-study/}
+
+
+\subsection{Google Cloud}
+
+\subsubsection*{Descripción y antecedentes}
+
+Google Cloud es la plataforma de servicios en la nube de Google. Sus primeros
+servicios públicos aparecieron en 2008 y posteriormente se incorporaron
+herramientas especializadas en análisis de datos, entre ellas BigQuery.
+
+La plataforma aprovecha tecnologías desarrolladas por Google para procesar
+información a gran escala. Se caracteriza por sus servicios administrados y
+por reducir la necesidad de configurar servidores manualmente.
+
+\subsubsection*{Tipos de servicio}
+
+\begin{itemize}
+    \item \textbf{IaaS:} Compute Engine ofrece máquinas virtuales y Cloud
+    Storage proporciona almacenamiento de objetos.
+    
+    \item \textbf{PaaS:} BigQuery, Dataflow, Dataproc, Pub/Sub y Bigtable
+    proporcionan procesamiento y análisis administrado.
+    
+    \item \textbf{SaaS:} Looker permite elaborar reportes, análisis y tableros
+    empresariales.
+\end{itemize}
+
+\subsubsection*{Herramientas orientadas a Big Data}
+
+\begin{itemize}
+    \item \textbf{BigQuery:} almacén de datos sin servidor para analizar grandes
+    conjuntos de información con SQL.
+    
+    \item \textbf{Dataflow:} procesa datos por lotes y en tiempo real.
+    
+    \item \textbf{Dataproc:} ejecuta tecnologías como Apache Spark y Hadoop.
+    
+    \item \textbf{Pub/Sub:} recibe mensajes y eventos producidos continuamente.
+    
+    \item \textbf{Bigtable:} base de datos NoSQL para aplicaciones que requieren
+    manejar grandes cantidades de información.
+    
+    \item \textbf{Cloud Storage:} almacena archivos que pueden formar parte de
+    un lago de datos.
+\end{itemize}
+
+\subsubsection*{Precios}
+
+Google Cloud también utiliza pago por consumo. BigQuery puede cobrarse por los
+datos procesados en cada consulta o mediante capacidad reservada. Como
+referencia, ofrece el primer TiB procesado durante el mes sin costo y después
+cobra aproximadamente \$6.25 dólares por TiB. El almacenamiento y otros
+servicios se cobran por separado.
+
+\subsubsection*{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item BigQuery permite analizar datos sin administrar servidores.
+    \item Tiene buenas herramientas para inteligencia artificial.
+    \item Facilita el procesamiento de información en tiempo real.
+    \item Puede integrarse con herramientas de código abierto.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item Las consultas mal diseñadas pueden aumentar el costo.
+    \item Algunos servicios requieren conocimientos especializados.
+    \item Tiene menos presencia empresarial que AWS o Azure en algunas regiones.
+\end{itemize}
+
+\subsubsection*{Caso de éxito}
+
+Spotify utiliza Google Cloud para procesar información relacionada con
+canciones, listas de reproducción y actividad de sus usuarios. La plataforma
+le permite ejecutar miles de procesos de datos y generar recomendaciones
+personalizadas.
+
+\subsubsection*{Video sugerido}
+
+Video oficial con una introducción y demostración de BigQuery:
+
+\url{https://www.youtube.com/watch?v=BH_7_zVk5oM}
+
+
+\subsection{Microsoft Azure}
+
+\subsubsection*{Descripción y antecedentes}
+
+Microsoft Azure es la plataforma de servicios en la nube de Microsoft. Fue
+lanzada comercialmente en 2010 y se encuentra integrada con productos como
+Windows Server, SQL Server, Microsoft 365 y Power BI.
+
+Azure permite construir soluciones de análisis que combinan almacenamiento,
+procesamiento, integración de información e inteligencia artificial.
+
+\subsubsection*{Tipos de servicio}
+
+\begin{itemize}
+    \item \textbf{IaaS:} Azure Virtual Machines proporciona servidores y Azure
+    Blob Storage ofrece almacenamiento de objetos.
+    
+    \item \textbf{PaaS:} Azure Synapse Analytics, Azure Data Factory, Event Hubs,
+    Stream Analytics y HDInsight ofrecen servicios administrados.
+    
+    \item \textbf{SaaS:} Power BI permite crear reportes y tableros para apoyar
+    la toma de decisiones.
+\end{itemize}
+
+\subsubsection*{Herramientas orientadas a Big Data}
+
+\begin{itemize}
+    \item \textbf{Azure Data Lake Storage:} almacena grandes cantidades de datos
+    estructurados y no estructurados.
+    
+    \item \textbf{Azure Synapse Analytics:} integra almacenamiento de datos,
+    consultas SQL y procesamiento con Apache Spark.
+    
+    \item \textbf{Azure Data Factory:} crea procesos para extraer, transformar
+    y cargar información.
+    
+    \item \textbf{Azure Event Hubs:} recibe millones de eventos generados por
+    aplicaciones y dispositivos.
+    
+    \item \textbf{Azure Stream Analytics:} analiza flujos de información en
+    tiempo real.
+    
+    \item \textbf{Azure HDInsight:} proporciona clústeres administrados de
+    Hadoop, Spark, Kafka y otras tecnologías.
+\end{itemize}
+
+\subsubsection*{Precios}
+
+El costo depende del almacenamiento, las operaciones y la capacidad de
+procesamiento. Synapse puede cobrar por la cantidad de datos consultados en su
+modalidad sin servidor o por la capacidad de un grupo dedicado. Microsoft
+también ofrece descuentos por reservar recursos durante uno o tres años.
+
+\subsubsection*{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item Se integra fácilmente con productos de Microsoft.
+    \item Permite construir soluciones híbridas.
+    \item Cuenta con herramientas de seguridad y administración empresarial.
+    \item Power BI facilita la visualización de resultados.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item Su sistema de precios puede resultar difícil de calcular.
+    \item La configuración inicial puede requerir personal especializado.
+    \item Algunos servicios tienen funciones similares y pueden confundirse.
+\end{itemize}
+
+\subsubsection*{Caso de éxito}
+
+Grupo Bimbo utiliza servicios como Azure Synapse Analytics y Power BI para
+analizar grandes cantidades de transacciones. Esta información le ayuda a
+mejorar sus rutas de distribución y a tomar decisiones comerciales con mayor
+rapidez.
+
+\subsubsection*{Video sugerido}
+
+Video oficial con una explicación y demostración de Azure Synapse Analytics:
+
+\url{https://www.youtube.com/watch?v=dvP0JwchjfI}
+
+
+\subsection{IBM Cloud}
+
+\subsubsection*{Descripción y antecedentes}
+
+IBM Cloud reúne la experiencia de IBM en infraestructura, bases de datos,
+analítica e inteligencia artificial. Su oferta fue fortalecida con servicios
+como SoftLayer, Bluemix y, posteriormente, la familia watsonx.
+
+Su enfoque principal son las empresas que necesitan trabajar en ambientes
+híbridos, es decir, combinar sistemas propios con recursos de nube pública.
+
+\subsubsection*{Tipos de servicio}
+
+\begin{itemize}
+    \item \textbf{IaaS:} IBM Virtual Servers y Cloud Object Storage proporcionan
+    procesamiento y almacenamiento.
+    
+    \item \textbf{PaaS:} watsonx.data, Db2 Warehouse, Analytics Engine y Event
+    Streams permiten procesar y analizar información.
+    
+    \item \textbf{SaaS:} IBM Cognos Analytics proporciona reportes,
+    visualizaciones y análisis empresarial.
+\end{itemize}
+
+\subsubsection*{Herramientas orientadas a Big Data}
+
+\begin{itemize}
+    \item \textbf{IBM Cloud Object Storage:} almacena datos no estructurados.
+    
+    \item \textbf{IBM watsonx.data:} plataforma abierta de tipo lakehouse para
+    consultar y gobernar datos empresariales.
+    
+    \item \textbf{IBM Db2 Warehouse:} almacén de datos para análisis mediante SQL.
+    
+    \item \textbf{IBM Analytics Engine:} proporciona procesamiento con Apache
+    Spark.
+    
+    \item \textbf{IBM Event Streams:} procesa eventos en tiempo real con
+    tecnología basada en Apache Kafka.
+    
+    \item \textbf{IBM Cognos Analytics:} crea reportes y tableros empresariales.
+\end{itemize}
+
+\subsubsection*{Precios}
+
+IBM utiliza precios por consumo y planes empresariales. En watsonx.data los
+recursos se miden mediante unidades de recurso o RU. Como referencia, algunos
+planes utilizan un precio aproximado de \$1 dólar por RU. El almacenamiento,
+la transferencia y otros componentes pueden cobrarse por separado.
+
+\subsubsection*{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item Tiene experiencia en soluciones para grandes empresas.
+    \item Su enfoque híbrido permite trabajar con datos locales y en la nube.
+    \item Ofrece herramientas de gobierno y seguridad de la información.
+    \item Utiliza tecnologías y formatos abiertos.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item Su catálogo es menor que el de AWS, Azure o Google Cloud.
+    \item Algunas soluciones están orientadas principalmente a empresas grandes.
+    \item Puede requerir asesoría especializada para su implementación.
+\end{itemize}
+
+\subsubsection*{Caso de éxito}
+
+IBM utiliza sus servicios de datos e inteligencia artificial en eventos
+deportivos como Wimbledon. La información de partidos y jugadores se procesa
+rápidamente para producir estadísticas y contenido que mejora la experiencia
+de los aficionados.
+
+\subsubsection*{Video sugerido}
+
+Biblioteca oficial de demostraciones de IBM watsonx.data:
+
+\url{https://www.ibm.com/products/watsonx-data/demo-library}
+
+
+\subsection{Cloudera y Hortonworks}
+
+\subsubsection*{Descripción y antecedentes}
+
+Cloudera y Hortonworks fueron empresas especializadas en plataformas basadas
+en Apache Hadoop. Cloudera fue fundada en 2008 y Hortonworks en 2011. Ambas
+empresas completaron su fusión en enero de 2019.
+
+Por esta razón, Hortonworks ya no funciona como una plataforma independiente.
+Sus tecnologías se integraron en la actual Cloudera Data Platform, conocida
+como CDP.
+
+\subsubsection*{Tipos de servicio}
+
+\begin{itemize}
+    \item \textbf{IaaS:} Cloudera no ofrece infraestructura general propia. La
+    plataforma utiliza los recursos de AWS, Azure, Google Cloud o servidores
+    locales.
+    
+    \item \textbf{PaaS:} CDP proporciona servicios administrados de ingeniería,
+    almacenamiento, procesamiento, gobierno y aprendizaje automático.
+    
+    \item \textbf{SaaS:} algunas funciones administradas de análisis y
+    visualización se ofrecen mediante acceso web.
+\end{itemize}
+
+\subsubsection*{Herramientas orientadas a Big Data}
+
+\begin{itemize}
+    \item \textbf{Cloudera Data Engineering:} ejecuta procesos de transformación
+    mediante Apache Spark.
+    
+    \item \textbf{Cloudera Data Warehouse:} permite realizar consultas con
+    tecnologías como Hive e Impala.
+    
+    \item \textbf{Cloudera DataFlow:} mueve y procesa información con Apache
+    NiFi y Kafka.
+    
+    \item \textbf{Cloudera Data Hub:} permite crear clústeres para diferentes
+    cargas de trabajo.
+    
+    \item \textbf{Cloudera Machine Learning:} ayuda a desarrollar y publicar
+    modelos de aprendizaje automático.
+    
+    \item \textbf{Cloudera SDX:} administra seguridad, catálogo, permisos y
+    gobierno de los datos.
+\end{itemize}
+
+\subsubsection*{Precios}
+
+En la nube pública, Cloudera cobra mediante unidades de cómputo llamadas CCU.
+Dependiendo del servicio, algunos precios de referencia se encuentran entre
+\$0.04 y \$0.20 dólares por CCU por hora. A este precio se debe sumar la
+infraestructura utilizada en AWS, Azure o Google Cloud. Las instalaciones
+locales normalmente se contratan mediante una suscripción empresarial.
+
+\subsubsection*{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item Puede trabajar en la nube y en centros de datos propios.
+    \item Mantiene compatibilidad con muchas tecnologías de código abierto.
+    \item Proporciona gobierno y seguridad centralizados.
+    \item Facilita la migración de sistemas Hadoop existentes.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item Su administración puede ser compleja.
+    \item Requiere conocimientos de Hadoop, Spark y otras tecnologías.
+    \item El costo incluye la licencia y la infraestructura del proveedor cloud.
+\end{itemize}
+
+\subsubsection*{Caso de éxito}
+
+Podo, una empresa española del sector energético, utiliza Cloudera y Google
+Cloud para analizar información de consumo eléctrico. El procesamiento de
+estos datos le permite generar pronósticos y mejorar la administración de la
+energía.
+
+\subsubsection*{Video sugerido}
+
+Demostración oficial de ingeniería de datos con Cloudera:
+
+\url{https://video.cloudera.com/detail/video/6324827111112/}
+
+
+\subsection{Databricks}
+
+\subsubsection*{Descripción y antecedentes}
+
+Databricks fue fundada en 2013 por varios de los creadores de Apache Spark.
+Su propuesta se basa en el concepto de \textit{lakehouse}, el cual combina las
+capacidades de un lago de datos y un almacén de datos.
+
+La plataforma permite que analistas, ingenieros de datos y científicos de
+datos trabajen con la misma información y dentro de un entorno compartido.
+
+\subsubsection*{Tipos de servicio}
+
+\begin{itemize}
+    \item \textbf{IaaS:} Databricks utiliza la infraestructura de AWS, Azure o
+    Google Cloud, pero no ofrece una nube de infraestructura propia.
+    
+    \item \textbf{PaaS:} ofrece entornos administrados para ingeniería de datos,
+    analítica, inteligencia artificial y aprendizaje automático.
+    
+    \item \textbf{SaaS:} Databricks SQL, los tableros y las herramientas de
+    colaboración se utilizan mediante una interfaz web.
+\end{itemize}
+
+\subsubsection*{Herramientas orientadas a Big Data}
+
+\begin{itemize}
+    \item \textbf{Apache Spark:} procesa grandes cantidades de datos de manera
+    distribuida.
+    
+    \item \textbf{Delta Lake:} agrega confiabilidad, historial y control de
+    transacciones a un lago de datos.
+    
+    \item \textbf{Databricks SQL:} permite consultar datos y crear tableros.
+    
+    \item \textbf{Unity Catalog:} administra permisos, metadatos y gobierno de
+    la información.
+    
+    \item \textbf{MLflow:} ayuda a administrar el ciclo de vida de los modelos
+    de aprendizaje automático.
+    
+    \item \textbf{Notebooks colaborativos:} permiten trabajar con Python, SQL,
+    R y Scala.
+\end{itemize}
+
+\subsubsection*{Precios}
+
+El consumo se mide mediante unidades llamadas DBU. El costo total depende del
+tipo de carga de trabajo, las DBU utilizadas y la infraestructura contratada
+en AWS, Azure o Google Cloud. Existen modalidades de pago por uso, contratos
+con consumo comprometido y opciones sin servidor.
+
+\subsubsection*{Ventajas y desventajas}
+
+\textbf{Ventajas:}
+
+\begin{itemize}
+    \item Integra ingeniería de datos, SQL e inteligencia artificial.
+    \item Facilita la colaboración entre diferentes equipos.
+    \item Puede utilizarse en las tres principales plataformas cloud.
+    \item Está construido alrededor de Apache Spark y formatos abiertos.
+\end{itemize}
+
+\textbf{Desventajas:}
+
+\begin{itemize}
+    \item El costo puede aumentar si los clústeres permanecen activos.
+    \item Requiere conocimientos de programación y procesamiento distribuido.
+    \item Depende de la infraestructura de otro proveedor cloud.
+\end{itemize}
+
+\subsubsection*{Caso de éxito}
+
+Shell utiliza Databricks como parte de su estrategia de análisis e
+inteligencia artificial. La plataforma permite que sus equipos preparen datos,
+entrenen modelos y colaboren en proyectos relacionados con energía,
+mantenimiento y optimización de operaciones.
+
+\subsubsection*{Video sugerido}
+
+Demostración oficial de aprendizaje automático con Databricks:
+
+\url{https://www.youtube.com/watch?v=1TPu-uOLglI}
+
+
+\subsection{Comparación general}
+
+\begin{itemize}
+    \item \textbf{AWS} destaca por la cantidad y variedad de sus servicios.
+    
+    \item \textbf{Google Cloud} resulta conveniente para análisis sin servidor,
+    principalmente mediante BigQuery.
+    
+    \item \textbf{Microsoft Azure} es útil para organizaciones que ya emplean
+    productos de Microsoft.
+    
+    \item \textbf{IBM Cloud} se orienta a soluciones empresariales híbridas y
+    al gobierno de la información.
+    
+    \item \textbf{Cloudera} es apropiada para ambientes híbridos y organizaciones
+    que utilizan Hadoop y otras tecnologías abiertas.
+    
+    \item \textbf{Databricks} ofrece una plataforma unificada para ingeniería de
+    datos, análisis e inteligencia artificial.
+\end{itemize}
+
+\subsection{Conclusión}
+
+No existe una plataforma que sea la mejor para todos los casos. La elección
+depende del presupuesto, la experiencia del equipo, las herramientas que ya
+utiliza la organización y la cantidad de información que necesita procesar.
+
+Las plataformas estudiadas permiten almacenar y analizar grandes volúmenes de
+datos, pero tienen diferencias importantes. AWS y Azure ofrecen catálogos muy
+amplios; Google Cloud facilita el análisis sin servidor; IBM y Cloudera se
+enfocan en soluciones híbridas; mientras que Databricks integra ingeniería de
+datos e inteligencia artificial en un mismo entorno. Antes de seleccionar una
+solución es necesario realizar una prueba y calcular su costo estimado.

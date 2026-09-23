@@ -1,0 +1,6 @@
+Hadoop procesa grandes cantidades de datos.
+Hadoop divide el trabajo entre varios nodos.
+MapReduce utiliza las funciones Map y Reduce.
+Map procesa palabras y Reduce suma resultados.
+Docker permite ejecutar Hadoop en contenedores.
+Hadoop y MapReduce ayudan a procesar datos.

@@ -1,0 +1,220 @@
+% !TeX root = ../../main.tex
+
+% Configuración para mostrar código Python
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries,
+    commentstyle=\itshape,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    numbersep=8pt,
+    frame=single,
+    breaklines=true,
+    showstringspaces=false,
+    columns=fullflexible,
+    inputencoding=utf8,
+    literate=
+        {á}{{\'a}}1
+        {é}{{\'e}}1
+        {í}{{\'i}}1
+        {ó}{{\'o}}1
+        {ú}{{\'u}}1
+        {ü}{{\"u}}1
+        {ñ}{{\~n}}1
+}
+
+\section{Introducción}
+
+MapReduce es un modelo de programación que permite procesar grandes
+cantidades de información dividiendo el trabajo en varias tareas. Estas
+tareas pueden ser ejecutadas de manera secuencial o paralela.
+
+En esta actividad se implementó en Python un contador de palabras inspirado
+en MapReduce. El programa compara tres formas de ejecución: secuencial,
+mediante hilos y mediante procesos.
+
+\section{Objetivo}
+
+Implementar un contador de palabras que represente las principales etapas
+de MapReduce y utilizar las herramientas de concurrencia de Python para
+comparar la ejecución secuencial, con hilos y con procesos.
+
+\section{Descripción del programa}
+
+El programa recibe un texto y cuenta cuántas veces aparece cada palabra.
+Antes de realizar el conteo, convierte todas las palabras a minúsculas y
+elimina algunas palabras comunes, como ``el'', ``la'', ``de'' y ``en''.
+
+La información se procesa mediante las siguientes etapas:
+
+\begin{enumerate}
+    \item División del texto en varios fragmentos.
+    \item Aplicación de la función Map sobre cada fragmento.
+    \item Agrupación de los resultados mediante Shuffle.
+    \item División de los grupos entre los reductores.
+    \item Suma de las apariciones mediante Reduce.
+    \item Unión de los resultados parciales.
+\end{enumerate}
+
+\section{Etapas de la implementación}
+
+\subsection{División del texto}
+
+La función \texttt{split\_text()} divide el texto utilizando sus líneas.
+Cada fragmento puede ser enviado a un trabajador diferente.
+
+La división por líneas evita cortar una palabra por la mitad y permite que
+las tareas procesen partes independientes del archivo.
+
+\subsection{Etapa Map}
+
+La función \texttt{map\_chunk()} recibe un fragmento del texto. Mediante una
+expresión regular identifica las palabras y genera el par
+\texttt{(palabra, 1)} para cada una.
+
+Por ejemplo, para la entrada:
+
+\begin{center}
+\texttt{Python procesa datos}
+\end{center}
+
+La función Map produce:
+
+\begin{center}
+\texttt{(python, 1), (procesa, 1), (datos, 1)}
+\end{center}
+
+\subsection{Etapa Shuffle}
+
+La función \texttt{shuffle()} agrupa los valores que tienen la misma palabra.
+Por ejemplo:
+
+\begin{center}
+\texttt{(python, 1), (python, 1)}
+\end{center}
+
+se transforma en:
+
+\begin{center}
+\texttt{(python, [1, 1])}
+\end{center}
+
+Esta etapa se realiza en el proceso principal antes de enviar los grupos a
+los reductores.
+
+\subsection{Partición}
+
+La función \texttt{partition()} divide las palabras agrupadas en varias
+partes. Cada parte puede ser procesada por un trabajador distinto durante
+la etapa Reduce.
+
+\subsection{Etapa Reduce}
+
+La función \texttt{reduce\_partition()} suma la lista de valores de cada
+palabra.
+
+Por ejemplo:
+
+\begin{center}
+\texttt{(python, [1, 1])} $\longrightarrow$ \texttt{(python, 2)}
+\end{center}
+
+Finalmente, la función \texttt{merge()} combina todos los diccionarios
+parciales en un único resultado.
+
+\section{Modos de ejecución}
+
+El programa utiliza tres modos de ejecución:
+
+\begin{itemize}
+    \item \textbf{Secuencial:} todas las funciones se ejecutan una después de
+    otra en el proceso principal.
+
+    \item \textbf{Hilos:} utiliza \texttt{ThreadPoolExecutor} para distribuir
+    las tareas entre varios hilos del mismo proceso.
+
+    \item \textbf{Procesos:} utiliza \texttt{ProcessPoolExecutor} para ejecutar
+    las tareas en procesos separados.
+\end{itemize}
+
+Los procesos son útiles para trabajos que utilizan principalmente el
+procesador. Los hilos suelen ser más apropiados cuando las tareas pasan
+tiempo esperando operaciones de entrada y salida.
+
+\section{Código fuente}
+
+El siguiente código contiene la implementación completa del contador de
+palabras:
+
+\lstinputlisting[
+    caption={Implementación de MapReduce en Python},
+    label={lst:mapreduce}
+]{\actividadactual/mapreduce.py}
+
+\section{Ejemplo de ejecución}
+
+El programa puede ejecutarse desde la terminal con el siguiente comando:
+
+\begin{verbatim}
+python3 mapreduce.py
+\end{verbatim}
+
+También se puede indicar un archivo de texto:
+
+\begin{verbatim}
+python3 mapreduce.py archivo.txt
+\end{verbatim}
+
+Una ejecución de prueba produjo el siguiente resultado:
+
+\begin{verbatim}
+Available cores used: 4
+Text size: 403 characters
+
+sequential    0.00004 s   (41 unique words)
+threads       0.00032 s   (41 unique words)
+processes     0.07331 s   (41 unique words)
+
+Top 10 most frequent words:
+  come            2
+  programacion    2
+  cada            1
+  cardillo        1
+  carne           1
+  ciguena         1
+  combina         1
+  comia           1
+  detras          1
+  diccionario     1
+\end{verbatim}
+
+Los tiempos pueden cambiar dependiendo de la computadora y de los programas
+que estén ejecutándose en ese momento.
+
+\section{Análisis de resultados}
+
+Los tres modos encontraron 41 palabras diferentes y produjeron exactamente
+el mismo conteo. Esto demuestra que la división del trabajo no modifica el
+resultado final.
+
+En esta prueba la versión secuencial fue la más rápida porque el texto es
+pequeño. La creación y coordinación de hilos y procesos necesita tiempo
+adicional. Con archivos más grandes, la versión con procesos puede aprovechar
+mejor los diferentes núcleos del procesador.
+
+La versión con hilos no necesariamente mejora el tiempo en este ejercicio,
+debido a que el conteo de palabras es una operación que utiliza principalmente
+el procesador.
+
+\section{Conclusión}
+
+La actividad permitió implementar las etapas principales de MapReduce:
+división, Map, Shuffle, partición y Reduce. También permitió comparar la
+ejecución secuencial con el procesamiento mediante hilos y procesos.
+
+El programa genera resultados correctos en los tres modos. Sin embargo, el
+paralelismo no siempre significa una ejecución más rápida, especialmente
+cuando la cantidad de información es pequeña y el costo de crear trabajadores
+es mayor que el trabajo realizado.

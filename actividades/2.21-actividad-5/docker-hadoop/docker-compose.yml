@@ -1,0 +1,50 @@
+services:
+  namenode:
+    image: ghcr.io/apache/hadoop:3.5.0
+    container_name: actividad5-namenode
+    hostname: namenode
+    command: [ "hdfs", "namenode" ]
+    env_file:
+      - ./hadoop.env
+    environment:
+      ENSURE_NAMENODE_DIR: /tmp/hadoop-hadoop/dfs/name
+    ports:
+      - "9870:9870"
+    volumes:
+      - ./src:/workspace:ro
+
+  datanode:
+    image: ghcr.io/apache/hadoop:3.5.0
+    container_name: actividad5-datanode
+    hostname: datanode
+    command: [ "hdfs", "datanode" ]
+    env_file:
+      - ./hadoop.env
+    environment:
+      WAITFOR: namenode:8020
+    depends_on:
+      - namenode
+
+  resourcemanager:
+    image: ghcr.io/apache/hadoop:3.5.0
+    container_name: actividad5-resourcemanager
+    hostname: resourcemanager
+    command: [ "yarn", "resourcemanager" ]
+    env_file: ./hadoop.env
+    ports:
+      - "8088:8088"
+
+  nodemanager:
+    image: ghcr.io/apache/hadoop:3.5.0
+    container_name: actividad5-nodemanager
+    hostname: nodemanager
+    command: [ "yarn", "nodemanager" ]
+    env_file:
+      - ./hadoop.env
+    environment:
+      WAITFOR: resourcemanager:8031
+    depends_on:
+      - resourcemanager
+      - datanode
+    ports:
+      - "8042:8042"

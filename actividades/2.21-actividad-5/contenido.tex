@@ -1,0 +1,185 @@
+% !TeX root = ../../main.tex
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    columns=fullflexible,
+    literate=
+        {á}{{\'a}}1
+        {é}{{\'e}}1
+        {í}{{\'i}}1
+        {ó}{{\'o}}1
+        {ú}{{\'u}}1
+        {ü}{{\"u}}1
+        {ñ}{{\~n}}1
+}
+
+\section{Introducción}
+
+En esta actividad se implementó un contador de palabras mediante
+MapReduce. Para realizar la práctica se utilizó Hadoop 3.5.0 dentro de
+contenedores Docker. El programa fue escrito en Python y se ejecutó
+mediante Hadoop Streaming.
+
+\section{Configuración de Hadoop}
+
+El entorno se creó con Docker Compose y está formado por los siguientes
+servicios:
+
+\begin{itemize}
+    \item NameNode: administra el sistema de archivos HDFS.
+    \item DataNode: almacena los bloques de datos.
+    \item ResourceManager: administra los recursos del clúster.
+    \item NodeManager: ejecuta las tareas de MapReduce.
+\end{itemize}
+
+Para iniciar los servicios se utilizó el siguiente comando:
+
+\begin{lstlisting}[language={}, caption={Inicio de los servicios}]
+docker compose up -d
+\end{lstlisting}
+
+La ejecución de \texttt{docker compose ps} permitió comprobar que los
+cuatro contenedores estaban activos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]
+    {\actividadactual/img/captura-4.png}
+    \caption{Contenedores de Hadoop en ejecución.}
+\end{figure}
+
+\section{Implementación del contador de palabras}
+
+El archivo de entrada contiene varias oraciones relacionadas con
+Hadoop, Docker y MapReduce.
+
+\lstinputlisting[
+    language={},
+    caption={Archivo de entrada}
+]{\actividadactual/docker-hadoop/src/entrada.txt}
+
+\subsection{Mapper}
+
+El programa \texttt{mapper.py} recibe el texto por la entrada estándar,
+convierte las palabras a minúsculas y genera un par formado por la
+palabra y el número uno.
+
+\lstinputlisting[
+    language=Python,
+    caption={Código del mapper}
+]{\actividadactual/docker-hadoop/src/mapper.py}
+
+Por ejemplo, si aparece dos veces la palabra \texttt{hadoop}, el mapper
+genera inicialmente:
+
+\begin{lstlisting}[language={}]
+hadoop    1
+hadoop    1
+\end{lstlisting}
+
+\subsection{Reducer}
+
+El programa \texttt{reducer.py} recibe las palabras ordenadas y suma los
+valores correspondientes a cada una. Su salida contiene cada palabra
+junto con su número total de apariciones.
+
+\lstinputlisting[
+    language=Python,
+    caption={Código del reducer}
+]{\actividadactual/docker-hadoop/src/reducer.py}
+
+\section{Ejecución en Hadoop}
+
+Primero se creó el directorio de entrada en HDFS y se copió el archivo
+de texto:
+
+\begin{lstlisting}[language={}, caption={Carga del archivo en HDFS}]
+docker compose exec -T namenode \
+hdfs dfs -mkdir -p /user/hadoop/input
+
+docker compose exec -T namenode \
+hdfs dfs -put -f /workspace/entrada.txt \
+/user/hadoop/input/
+\end{lstlisting}
+
+Después se ejecutó el trabajo mediante Hadoop Streaming:
+
+\begin{lstlisting}[language={}, caption={Ejecución de Hadoop Streaming}]
+docker compose exec -T namenode \
+hadoop jar \
+/opt/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.5.0.jar \
+-D mapreduce.job.name=conteo-palabras-python \
+-files /workspace/mapper.py,/workspace/reducer.py \
+-mapper "python3 mapper.py" \
+-reducer "python3 reducer.py" \
+-input /user/hadoop/input \
+-output /user/hadoop/output
+\end{lstlisting}
+
+La ejecución terminó correctamente con el mapper y el reducer al
+100\,\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]
+    {\actividadactual/img/captura-1.png}
+    \caption{Ejecución correcta del trabajo MapReduce.}
+\end{figure}
+
+También se verificó el trabajo desde la interfaz de YARN. La aplicación
+apareció con estado \texttt{FINISHED} y resultado
+\texttt{SUCCEEDED}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]
+    {\actividadactual/img/captura-3.png}
+    \caption{Trabajo completado correctamente en YARN.}
+\end{figure}
+
+\section{Resultados}
+
+Para consultar el resultado almacenado en HDFS se utilizó el siguiente
+comando:
+
+\begin{lstlisting}[language={}, caption={Consulta del resultado}]
+docker compose exec -T namenode \
+hdfs dfs -cat /user/hadoop/output/part-00000
+\end{lstlisting}
+
+El programa contó correctamente las palabras del archivo. Algunos de
+los resultados obtenidos fueron:
+
+\begin{center}
+\begin{tabular}{lr}
+    \toprule
+    \textbf{Palabra} & \textbf{Cantidad} \\
+    \midrule
+    hadoop    & 4 \\
+    y         & 3 \\
+    datos     & 2 \\
+    map       & 2 \\
+    mapreduce & 2 \\
+    procesa   & 2 \\
+    reduce    & 2 \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]
+    {\actividadactual/img/captura-2.png}
+    \caption{Resultado del conteo de palabras almacenado en HDFS.}
+\end{figure}
+
+\section{Conclusión}
+
+La práctica permitió ejecutar un proceso MapReduce en un entorno Hadoop
+instalado con Docker. El mapper generó los pares de palabra y valor,
+mientras que el reducer sumó las apariciones. Finalmente, Hadoop
+almacenó el resultado en HDFS y YARN confirmó que el trabajo terminó
+correctamente.

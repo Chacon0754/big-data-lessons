@@ -152,7 +152,7 @@ if result.returncode != 0:
     print("COMPILATION ERROR")
     print("=" * 60)
     print(
-        "LaTex found errors"
+        "LaTex found errors\n"
         "The final PDF won't be generated"
     )
     sys.exit(1)

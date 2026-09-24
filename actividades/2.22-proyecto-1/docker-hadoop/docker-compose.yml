@@ -1,0 +1,89 @@
+name: proyecto1-hadoop
+
+services:
+  namenode:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: namenode
+    command: [ "hdfs", "namenode" ]
+    env_file: ./hadoop.env
+    environment:
+      ENSURE_NAMENODE_DIR: /tmp/hadoop-hadoop/dfs/name
+    ports:
+      - "9870:9870"
+    volumes:
+      - ./src:/workspace:ro
+
+  resourcemanager:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: resourcemanager
+    command: [ "yarn", "resourcemanager" ]
+    env_file: ./hadoop.env
+    ports:
+      - "8088:8088"
+
+  datanode1:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: datanode1
+    command: [ "hdfs", "datanode" ]
+    env_file: ./hadoop.env
+    environment:
+      WAITFOR: namenode:8020
+    depends_on:
+      - namenode
+
+  nodemanager1:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: nodemanager1
+    command: [ "yarn", "nodemanager" ]
+    env_file: ./hadoop.env
+    environment:
+      WAITFOR: resourcemanager:8031
+    depends_on:
+      - resourcemanager
+      - datanode1
+
+  datanode2:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: datanode2
+    profiles: [ "tres-nodos" ]
+    command: [ "hdfs", "datanode" ]
+    env_file: ./hadoop.env
+    environment:
+      WAITFOR: namenode:8020
+    depends_on:
+      - namenode
+
+  nodemanager2:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: nodemanager2
+    profiles: [ "tres-nodos" ]
+    command: [ "yarn", "nodemanager" ]
+    env_file: ./hadoop.env
+    environment:
+      WAITFOR: resourcemanager:8031
+    depends_on:
+      - resourcemanager
+      - datanode2
+
+  datanode3:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: datanode3
+    profiles: [ "tres-nodos" ]
+    command: [ "hdfs", "datanode" ]
+    env_file: ./hadoop.env
+    environment:
+      WAITFOR: namenode:8020
+    depends_on:
+      - namenode
+
+  nodemanager3:
+    image: ghcr.io/apache/hadoop:3.5.0
+    hostname: nodemanager3
+    profiles: [ "tres-nodos" ]
+    command: [ "yarn", "nodemanager" ]
+    env_file: ./hadoop.env
+    environment:
+      WAITFOR: resourcemanager:8031
+    depends_on:
+      - resourcemanager
+      - datanode3

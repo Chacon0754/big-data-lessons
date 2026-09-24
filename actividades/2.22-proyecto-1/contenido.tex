@@ -1,0 +1,672 @@
+% !TeX root = ../../main.tex
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    showstringspaces=false,
+    columns=fullflexible,
+    literate=
+        {á}{{\'a}}1
+        {é}{{\'e}}1
+        {í}{{\'i}}1
+        {ó}{{\'o}}1
+        {ú}{{\'u}}1
+        {ü}{{\"u}}1
+        {ñ}{{\~n}}1
+}
+
+\section{Introducción}
+
+Este proyecto tiene como propósito configurar Apache Hadoop en Docker 
+y comparar los tiempos de ejecución de un contador de palabras mediante 
+MapReduce, utilizando uno y tres nodos trabajadores.
+
+Se utilizaron los mismos programas y datos de entrada en ambas configuraciones. 
+Para este proyecto, cada nodo trabajador correspondió a una pareja de servicios DataNode 
+y NodeManager, además de los servicios centrales de administración del clúster.
+
+\section{Preparación del proyecto}
+Se creó una carpeta independiente llamada \texttt{2.22-proyecto-1} para organizar la 
+configuración, los programas y las evidencias. 
+
+La estructura inicial es la siguiente: 
+
+\begin{lstlisting}[language={}]
+    2.22-proyecto-1/
+        docker-hadoop/
+            hadoop.env
+            src/
+                mapper.py
+                reducer.py
+        evidence/
+        img/
+\end{lstlisting}
+
+La carpeta \texttt{docker-hadoop} contiene los archivos del 
+entorno. En \texttt{evidence} se guardaron los resultados y tiempos 
+de ejecución, mientras que \texttt{img} almacenó las capturas utilizadas en el reporte. 
+
+También se consultaron los contenedores activos mediante \texttt{docker ps}. En ese momento no había contenedores 
+en ejecución.
+
+\section{Programas de MapReduce}
+
+Se copiaron los archivos \texttt{mapper.py} y 
+\texttt{reducer.py} de la actividad anterior. Ambos programas se reutilizaron sin cambios con uno y tres trabajadores.
+
+\noindent
+\begin{minipage}{\textwidth}
+
+\subsection{Mapper}
+
+El mapper lee el texto desde la entrada estándar,
+convierte las palabras a minúsculas y emite un par
+formado por cada palabra y el valor uno.
+La expresión regular permite reconocer letras,
+números y caracteres como acentos y la letra ñ.
+
+\lstinputlisting[
+    language=Python,
+    caption={Programa mapper para el conteo de palabras}
+]{\actividadactual/docker-hadoop/src/mapper.py}
+
+\end{minipage}
+\par
+
+Por ejemplo, para la entrada \texttt{Hadoop usa Hadoop}, 
+el mapper produce:
+
+\begin{lstlisting}[language={}]
+hadoop  1
+usa     1
+hadoop  1
+\end{lstlisting}
+
+\noindent
+\begin{minipage}{\textwidth}
+
+\subsection{Reducer}
+
+El reducer recibe los pares ordenados por palabra
+y suma sus valores. Al cambiar de palabra, imprime
+el total acumulado; al finalizar la entrada, imprime
+el último grupo.
+
+Durante la ejecución en Hadoop, el framework se
+encarga de agrupar y ordenar la salida de los
+mappers antes de entregarla a los reducers.
+
+\lstinputlisting[
+    language=Python,
+    caption={Programa reducer para sumar las apariciones}
+]{\actividadactual/docker-hadoop/src/reducer.py}
+
+\end{minipage}
+\par
+
+Para el ejemplo anterior, el resultado esperado es:
+
+\begin{lstlisting}[language={}]
+hadoop  2
+usa     1
+\end{lstlisting}
+
+\section{Configuración inicial de Hadoop}
+
+Se creó el archivo \texttt{hadoop.env} tomando como base la configuración inicial anterior. 
+Este archivo define la conexión a HDFS y los parámetros de ejecución de MapReduce mediante YARN.
+
+Los principales valores configurados son:
+
+\begin{center}
+    \begin{tabular}{lr}
+        \toprule
+        \textbf{Parámetro} & \textbf{Valor} \\
+        \midrule
+        Factor de replicación en HDFS & 1 \\
+        Memoria anunciada por trabajador & 2048 MB \\
+        Memoria solicitada por tarea Map & 512 MB \\
+        Memoria solicitada por tarea Reduce & 512 MB \\
+        Memoria solicitada por ApplicationMaster & 512 MB \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+El factor de replicación indica cuántas copias se mantienen
+de cada bloque de datos; no determina el número de nodos
+trabajadores.
+
+La memoria anunciada por trabajadores es un recurso que YARN 
+utiliza para planificar las tareas. Este valor no representa 
+una reserva automática de memoria en Docker.
+
+\subsection{Definición de los servicios en Docker Compose}
+
+Se creó el archivo \texttt{docker-compose.yml} utilizando 
+la imagen \texttt{ghcr.io/apache/hadoop:3.5.0} para todos los servicios.
+
+El NameNode administra los archivos de HDFS y el 
+ResourceManager coordina los recursos de ejecución. 
+Los servicios DataNode almacenan los bloques de datos, 
+mientras que los NodeManager permiten ejecutar las tareas.
+
+Cada trabajador se representa mediante una pareja de 
+servicios DataNode y NodeManager, ejecutados en contenedores 
+separados. Todos los contenedores comparten los recursos 
+de la misma computadora.
+
+Se definieron dos configuraciones:
+
+\begin{itemize}
+    \item Un trabajador: un DataNode y un NodeManager, 
+    además de los dos servicios centrales.
+    En total, cuatro contenedores.
+    
+    \item Tres trabajadores: tres DataNode y tres NodeManager,
+    además de los dos servicios centrales.
+    En total, ocho contenedores.
+\end{itemize}
+
+Los trabajadores adicionales se asociaron al perfil 
+\texttt{tres-nodos} de Docker Compose. Esto permite 
+habilitarlos sin modificar el archivo de configuración.
+
+Se configuraron los puertos 9870 y 8088 para acceder 
+desde el navegador a las interfaces de NameNode y 
+del ResourceManager, respectivamente.
+
+\section{Prueba con un nodo trabajador}
+
+\subsection{Inicio de los servicios}
+
+Desde la carpeta \texttt{docker-hadoop} se inició la 
+configuración de un trabajador mediante el siguiente comando:
+
+\begin{lstlisting}[language={}]
+    docker compose up -d
+\end{lstlisting}
+
+Esta configuración incluye los servicios NameNode, 
+ResourceManager, DataNode y NodeManager.
+
+Después se consultó el estado de los contenedores:
+
+\begin{lstlisting}[language={}]
+    docker compose ps -a
+\end{lstlisting}
+
+Los cuatro contenedores aparecieron con estado 
+\texttt{Up}, lo que confirmó que sus procesos estaban en ejecución.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-1.png}
+    \caption{Contenedores en ejecución para la 
+    configuración de un trabajador.}
+\end{figure}
+
+\subsection{Verificación del trabajador}
+
+Se verificó que el DataNode estuviera registrado en HDFS 
+mediante el siguiente comando:
+
+\begin{lstlisting}[language={}]
+    docker compose exec -T namenode hdfs dfsadmin -report
+\end{lstlisting}
+
+El reporte mostró un DataNode activo, identificado por 
+la línea \texttt{Live datanodes (1)}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]
+    {\actividadactual/img/captura-2.png}
+    \caption{DataNode activo y registrado en HDFS.}
+\end{figure}
+
+También se verificó el registro del NodeManager en YARN:
+
+\begin{lstlisting}[language={}]
+    docker compose exec -T resourcemanager yarn node -list
+\end{lstlisting}
+
+La consulta mostró un nodo con estado \texttt{RUNNING}, 
+disponible para recibir tareas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-3.png}
+    \caption{NodeManager registrado en YARN.}
+\end{figure}
+
+\subsection{Preparación de los datos de entrada}
+
+Se creó el programa \texttt{generate\_data.py} para generar 
+un conjunto de datos sintéticos y reproducibles. 
+El texto base contiene las siguientes oraciones:
+
+\begin{lstlisting}[language={}]
+    Hadoop procesa datos.
+    Docker ejecuta Hadoop.
+    MapReduce cuenta palabras.
+\end{lstlisting}
+
+Este bloque se repitió 50\,000 veces en cada uno de los 
+12 archivos generados. En total se obtuvieron 
+1\,800\,000 líneas y 45\,000\,000 bytes, 
+equivalentes a aproximadamente 42.92 MiB. 
+Cada oración incluye un espacio antes del salto de línea.
+
+Los archivos se guardaron en \texttt{src/data}. 
+Se utilizó este mismo conjunto de datos en las pruebas 
+con uno y tres trabajadores, sin modificar su contenido.
+
+El uso de texto repetido permite conocer de antemano 
+los conteos esperados y verificar posteriormente los 
+resultados del procesamiento.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-4.png}
+    \caption{Generación y revisión de los datos de entrada.}
+\end{figure}
+
+\subsection{Carga de los datos en HDFS}
+
+Se creó el directorio de entrada en HDFS:
+\begin{lstlisting}[language={}]
+docker compose exec -T namenode \
+  hdfs dfs -mkdir -p /user/hadoop/input
+\end{lstlisting}
+
+Los archivos generados estaban disponibles dentro del 
+contenedor en \texttt{/workspace/data}, mediante la 
+carpeta compartida configurada en Docker Compose. 
+Se copiaron a HDFS con el siguiente comando:
+
+\begin{lstlisting}[language={}]
+    docker compose exec -T namenode sh -c \
+        'hdfs dfs -put /workspace/data/input-*.txt /user/hadoop/input'
+\end{lstlisting}
+
+Se verificó la carga mediante los comandos 
+\texttt{hdfs dfs -ls} y \texttt{hdfs dfs -count -v}. 
+El directorio de entrada contenía 12 archivos, 
+con un tamaño total de 45\,000\,000 bytes, 
+coincidente con los datos generados localmente.
+
+La generación y carga de los archivos forman parte 
+de la preparación del entorno y no se incluyeron
+en la medición del tiempo de ejecución de MapReduce.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-5.png}
+    \caption{Archivos de entrada cargados en HDFS 
+    y Verificación de su tamaño total.}
+\end{figure}
+
+\subsection{Ejecución de comprobación}
+
+Se ejecutó el contador de palabras mediante Hadoop 
+Streaming, utilizando los programas \texttt{mapper.py} 
+y \texttt{reducer.py} sobre los 12 archivos de entrada.
+
+Se configuró un reducer y se estableció que comenzara 
+después de terminar todas las tareas Map. También se 
+desactivaron las ejecuciones especulativas. 
+Estos parámetros se mantuvieron en las pruebas 
+con uno y tres trabajadores.
+
+Esta ejecución se utilizó para comprobar el funcionamiento 
+del programa y no se incluyó en los tiempos de comparación.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-6.png}
+    \caption{Finalización correcta de la ejecución
+    de comprobación con un trabajador.}
+\end{figure}
+
+El bloque de texto se repite 600\,000 veces en el conjunto 
+de entrada. Por ello, el conteo esperado es de 
+1\,200\,000 apariciones de la palabra \texttt{hadoop} 
+y 600\,000 de cada una de las otras siete palabras.
+
+El resultado almacenado en HDFS coincidió con
+estos valores.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-7.png}
+    \caption{Resultado del conteo de palabras 
+    en la ejecución de comprobación.}
+\end{figure}
+
+
+\subsection{Medición del tiempo de ejecución}
+
+Después de comprobar el resultado del programa, se
+realizaron tres ejecuciones medidas con un trabajador
+y se calculó el promedio de sus tiempos.
+
+Para cada ejecución se utilizó el comando
+\texttt{/usr/bin/time -p}. Se registró el valor
+\texttt{real}, que representa el tiempo transcurrido
+en segundos desde el inicio del comando hasta su
+finalización.
+
+La medición incluyó el envío, la espera y la ejecución
+del trabajo. No incluyó la generación ni la carga
+previa de los datos en HDFS.
+
+Se mantuvieron los mismos archivos de entrada,
+programas y parámetros de MapReduce. Cada ejecución
+tuvo una carpeta de salida independiente y su registro
+se guardó en la carpeta \texttt{evidence}.
+
+El siguiente comando corresponde a la primera ejecución
+medida de la serie utilizada para obtener el promedio
+con un trabajador:
+
+\begin{lstlisting}[language={}]
+/usr/bin/time -p docker compose exec -T namenode \
+  hadoop jar \
+  /opt/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.5.0.jar \
+  -D mapreduce.job.name=wordcount-1node-series2-run1 \
+  -D mapreduce.job.reduces=1 \
+  -D mapreduce.job.reduce.slowstart.completedmaps=1.0 \
+  -D mapreduce.map.speculative=false \
+  -D mapreduce.reduce.speculative=false \
+  -files /workspace/mapper.py,/workspace/reducer.py \
+  -mapper "python3 mapper.py" \
+  -reducer "python3 reducer.py" \
+  -input /user/hadoop/input \
+  -output /user/hadoop/output/1node-series2-run1 \
+  2>&1 | tee ../evidence/1node-series2-run1.log
+\end{lstlisting}
+
+La opción \texttt{-files} distribuye los programas
+entre los nodos que ejecutan las tareas. Las opciones
+\texttt{-input} y \texttt{-output} indican las rutas
+de entrada y salida en HDFS.
+
+Se configuró un único reducer, cuyo inicio se pospuso
+hasta completar todas las tareas Map. También se
+desactivaron las ejecuciones especulativas.
+
+El comando \texttt{tee} permitió mostrar los mensajes
+en la terminal y guardar una copia en el archivo de
+registro, incluyendo la medición del tiempo.
+
+Para las ejecuciones restantes se cambiaron el nombre
+del trabajo, la carpeta de salida y el archivo de
+registro. Los parámetros de procesamiento se
+mantuvieron iguales.
+
+\subsection{Tiempos obtenidos con un trabajador}
+
+Se realizaron tres ejecuciones medidas sobre el mismo 
+conjunto de datos. Todas finalizaron correctamente. 
+Los tiempos registrados corresponden al valor 
+\texttt{real} del comando \texttt{/usr/bin/time -p}.
+
+
+\begin{center}
+    \begin{tabular}{lr}
+        \toprule
+        \textbf{Ejecución} & \textbf{Tiempo (s)} \\
+        \midrule
+        1 & 34.47 \\
+        2 & 37.53 \\
+        3 & 36.50 \\
+        \midrule
+        \textbf{Promedio} & \textbf{36.17} \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+Para el promedio se utilizaron únicamente las tres 
+ejecuciones de la serie \texttt{1node-series2}. 
+Las ejecuciones preliminares quedaron excluidas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-8.png}
+    \caption{Confirmación de éxito y tiempo de las 
+    tres ejecuciones con un trabajador.}
+\end{figure}
+
+\section{Prueba con tres nodos trabajadores}
+
+\subsection{Activación de los trabajadores adicionales}
+
+Se habilitó el perfil \texttt{tres-nodos} de Docker Compose:
+
+\begin{lstlisting}[language={}]
+    docker compose --profile tres-nodos up -d
+\end{lstlisting}
+
+Este comando inició los servicios DataNode y NodeManager 
+de los trabajadores 2 y 3. Los servicios que ya estaban 
+en ejecución permanecieron activos.
+
+Se comprobó el estado de los ocho contenedores:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-9.png}
+    \caption{Ocho contenedores activos para la 
+    configuración de tres trabajadores.}
+\end{figure}
+
+\subsection{Verificación de los trabajadores}
+
+Se consultó el estado de HDFS:
+
+\begin{lstlisting}[language={}]
+    docker compose exec -T namenode hdfs dfsadmin -report
+\end{lstlisting}
+
+El reporte mostró \texttt{Live datanodes (3)}, 
+confirmando el registro de los tres DataNode.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-10.png}
+    \caption{Tres DataNode registrados en HDFS.}
+\end{figure}
+
+Después se consultaron los nodos disponibles en YARN:
+
+\begin{lstlisting}[language={}]
+    docker compose exec -T resourcemanager yarn node -list
+\end{lstlisting}
+
+La consulta mostró tres NodeManager con estado 
+\texttt{RUNNING}, disponibles para ejecutar tareas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-11.png}
+    \caption{Tres NodeManager registrados en YARN.}
+\end{figure}
+
+\subsection{Preparación de los datos con tres trabajadores}
+
+Al incorporar los trabajadores adicionales, se observó 
+que los nuevos DataNode todavía no contenían bloques. 
+Los datos habían sido cargados cuando solo estaba disponible el primer DataNode.
+
+Se volvieron a cargar los mismos archivos originales 
+con los tres DataNode activos.
+
+\begin{lstlisting}[language={}]
+docker compose exec -T namenode sh -c \
+  'hdfs dfs -put -f /workspace/data/input-*.txt /user/hadoop/input/'
+\end{lstlisting}
+
+Se mantuvieron el contenido de los archivos y el factor 
+de replicación de uno.  Esta carga forma parte de la 
+preparación y queda fuera de las mediciones de tiempo.
+
+Se comprobó la distribución y el estado de los archivos 
+mediante el siguiente comando:
+
+\begin{lstlisting}[language={}]
+docker compose exec -T namenode \
+  hdfs fsck /user/hadoop/input -files -blocks -locations
+\end{lstlisting}
+
+\begin{center}
+    \begin{tabular}{lrr}
+        \toprule
+        \textbf{DataNode} & \textbf{Bloques} & \textbf{Bytes} \\
+        \midrule
+        datanode1 & 4 & 15\,000\,000 \\
+        datanode2 & 4 & 15\,000\,000 \\
+        datanode3 & 4 & 15\,000\,000 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+El estado de los archivos fue \texttt{HEALTHY}, 
+sin bloques perdidos ni corruptos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-12.png}
+    \caption{Verificación de los archivos de entrada 
+    en HDFS con tres DataNode activos.}
+\end{figure}
+
+\subsection{Ejecución de comprobación}
+
+Antes de medir los tiempos, se ejecutó el contador de 
+palabras con los tres trabajadores disponibles, 
+manteniendo los mismos programas y parámetros de 
+MapReduce utilizados con un trabajador.
+
+El trabajo terminó correctamente y ejecutó 12 tareas 
+Map y una Reduce. El resultado coincidió con 
+el obtenido en la configuración anterior: 
+1\,200\,000 apariciones de \texttt{hadoop} y 
+600\,000 de cada una de las otras siete palabras.
+
+Esta ejecución previa quedó fuera del promedio 
+de tiempos.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]
+    {\actividadactual/img/captura-13.png}
+    \caption{Resultado del conteo con tres
+    trabajadores disponibles.}
+\end{figure}
+
+\subsection{Tiempos obtenidos con tres trabajadores}
+
+Se realizaron tres ejecuciones medidas con los tres 
+trabajadores disponibles. Todas finalizaron correctamente, 
+con tiempos de 18.45, 21.41 y 21.85 segundos. 
+El promedio fue de 20.57 segundos.
+
+Se utilizó el mismo procedimiento de medición que 
+con un trabajador, excluyendo la ejecución previa 
+de comprobación.
+
+Se utilizó el mismo comando de Hadoop Streaming
+documentado para un trabajador, con los tres
+trabajadores activos. Los nombres de las salidas
+y los registros fueron \texttt{3nodes-timed1},
+\texttt{3nodes-timed2} y \texttt{3nodes-timed3},
+manteniendo los demás parámetros de procesamiento.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/img/captura-14.png}
+    \caption{Confirmación de éxito y tiempos de las
+    tres ejecuciones con tres trabajadores.}
+\end{figure}
+
+\section{Comparación de resultados}
+
+Las dos configuraciones procesaron los mismos 12 archivos, 
+con un tamaño de 45\,000\,000 bytes. 
+Se mantuvieron los programas, el factor de replicación 
+y los parámetros de MapReduce, incluyendo un único reducer.
+
+\begin{center}
+    \begin{tabular}{lrr}
+        \toprule
+        \textbf{Ejecución} & \textbf{Un trabajador (s)} & \textbf{Tres trabajadores (s)} \\
+        \midrule
+        1 & 34.47 & 18.45 \\
+        2 & 37.53 & 21.41 \\
+        3 & 36.50 & 21.85 \\
+        \midrule
+        \textbf{Promedio} & \textbf{36.17} & \textbf{20.57} \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+La reducción porcentual del tiempo se calculó mediante:
+
+\[
+    \text{reducción} = 
+    \frac{\overline{T}_1 - \overline{T}_3}
+    {\overline{T}_1}
+    \times 100 
+    \approx 43.12\text{\,\%}
+\]
+
+Donde $\overline{T}_1$ y $\overline{T}_3$ representan 
+los promedios con uno y tres trabajadores, respectivamente. 
+El porcentaje se calculó usando los promedios sin redondear.
+
+La configuración de tres trabajadores redujo el tiempo 
+aproximadamente 15.60 segundos.
+
+MapReduce permite distribuir las tareas Map entre los trabajadores disponibles. 
+Al incorporar más trabajadores, YARN dispone de más 
+recursos para ejecutar tareas simultáneamente. 
+Sin embargo, en esta prueba se mantuvo un único reducer y 
+la medición también incluyó el envío y la coordinación 
+del trabajo.
+
+Todos los contenedores compartieron los recursos de 
+la misma computadora. Además, se utilizó un conjunto 
+de datos sintéticos de aproximadamente 42.92 MiB. 
+Por ello, los resultados corresponden a las condiciones 
+de esta práctica y no representan una mejora garantizada 
+para cualquier volumen de datos o equipo.
+
+\section{Conclusión}
+
+Se configuró Apache Hadoop en Docker con uno y tres 
+nodos trabajadores y se ejecutó un contador de palabras 
+en Python mediante Hadoop Streaming.
+
+Las ejecuciones de comprobación produjeron el mismo 
+conteo en ambas configuraciones. En las pruebas medidas, 
+el tiempo promedio disminuyó de 36.17 a 20.57 segundos, 
+lo que representa una reducción del 43.12\,\%.
+
+La práctica permitió comprobar el funcionamiento de HDFS 
+y YARN, verificar la distribución de los datos y comparar 
+el tiempo de ejecución de MapReduce al aumentar 
+la cantidad de trabajadores.

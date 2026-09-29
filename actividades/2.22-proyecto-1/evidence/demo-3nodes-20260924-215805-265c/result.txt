@@ -1,0 +1,8 @@
+cuenta	600000
+datos	600000
+docker	600000
+ejecuta	600000
+hadoop	1200000
+mapreduce	600000
+palabras	600000
+procesa	600000

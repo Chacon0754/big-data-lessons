@@ -1,0 +1,426 @@
+{
+  "samples": [
+    {
+      "time": "2026-09-24T22:03:31.555204",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 0,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:31.913639",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 0,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:32.271038",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 0,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:32.624793",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:32.982740",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:33.342166",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:33.696946",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:34.051615",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:34.414788",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:34.774355",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:35.134397",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:35.495171",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:35.853027",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:36.216860",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:36.576310",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:36.932810",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:37.289700",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:37.648373",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:38.006433",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:38.364884",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:38.720881",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:39.078729",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:39.437667",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:39.796950",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:40.157603",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:40.513531",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:40.868406",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:41.226911",
+      "active": {
+        "nodemanager1": 2,
+        "nodemanager2": 2,
+        "nodemanager3": 2
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:41.584197",
+      "active": {
+        "nodemanager1": 1,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:41.944948",
+      "active": {
+        "nodemanager1": 1,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:42.303222",
+      "active": {
+        "nodemanager1": 1,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:42.660958",
+      "active": {
+        "nodemanager1": 1,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:43.020510",
+      "active": {
+        "nodemanager1": 1,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:43.376722",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:43.739868",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:44.096804",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:44.456847",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:44.817990",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:45.180329",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:45.538806",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:45.892498",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:46.249498",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:46.604390",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:46.962105",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:47.319897",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:47.677907",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:48.033524",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 2,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:48.391456",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:48.752115",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:49.113952",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:49.475820",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    },
+    {
+      "time": "2026-09-24T22:03:49.835638",
+      "active": {
+        "nodemanager1": 0,
+        "nodemanager2": 1,
+        "nodemanager3": 0
+      }
+    }
+  ],
+  "peaks": {
+    "nodemanager1": 2,
+    "nodemanager2": 2,
+    "nodemanager3": 2
+  },
+  "monitor_errors": []
+}

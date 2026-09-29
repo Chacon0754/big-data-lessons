@@ -1,0 +1,40 @@
+{
+  "job": "demo-3nodes-20260924-220331-5da0",
+  "application": "application_1790191099636_0014",
+  "elapsed_seconds": 18.5,
+  "timing": {
+    "real": 18.5,
+    "user": 0.03,
+    "sys": 0.02,
+    "command_exit_code": 0,
+    "observer_elapsed_seconds": 18.51455150003312
+  },
+  "result_matches_expected": true,
+  "node_peaks": {
+    "nodemanager1": 2,
+    "nodemanager2": 2,
+    "nodemanager3": 2
+  },
+  "started_containers": {
+    "nodemanager1": [
+      "container_1790191099636_0014_01_000003",
+      "container_1790191099636_0014_01_000004",
+      "container_1790191099636_0014_01_000008",
+      "container_1790191099636_0014_01_000009",
+      "container_1790191099636_0014_01_000013"
+    ],
+    "nodemanager2": [
+      "container_1790191099636_0014_01_000001",
+      "container_1790191099636_0014_01_000002",
+      "container_1790191099636_0014_01_000007",
+      "container_1790191099636_0014_01_000012",
+      "container_1790191099636_0014_01_000014"
+    ],
+    "nodemanager3": [
+      "container_1790191099636_0014_01_000005",
+      "container_1790191099636_0014_01_000006",
+      "container_1790191099636_0014_01_000010",
+      "container_1790191099636_0014_01_000011"
+    ]
+  }
+}

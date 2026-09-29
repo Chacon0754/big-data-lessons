@@ -1,0 +1,33 @@
+{
+  "job": "demo-3nodes-20260924-215805-265c",
+  "application": "application_1790191099636_0013",
+  "elapsed_seconds": 18.575338584021665,
+  "result_matches_expected": true,
+  "node_peaks": {
+    "nodemanager1": 2,
+    "nodemanager2": 2,
+    "nodemanager3": 2
+  },
+  "started_containers": {
+    "nodemanager1": [
+      "container_1790191099636_0013_01_000002",
+      "container_1790191099636_0013_01_000004",
+      "container_1790191099636_0013_01_000009",
+      "container_1790191099636_0013_01_000010",
+      "container_1790191099636_0013_01_000013"
+    ],
+    "nodemanager2": [
+      "container_1790191099636_0013_01_000005",
+      "container_1790191099636_0013_01_000006",
+      "container_1790191099636_0013_01_000007",
+      "container_1790191099636_0013_01_000008"
+    ],
+    "nodemanager3": [
+      "container_1790191099636_0013_01_000001",
+      "container_1790191099636_0013_01_000003",
+      "container_1790191099636_0013_01_000011",
+      "container_1790191099636_0013_01_000012",
+      "container_1790191099636_0013_01_000014"
+    ]
+  }
+}

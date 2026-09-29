@@ -1,0 +1,335 @@
+\section*{Data Lakes y Data Lakehouse}
+
+Un Data Lake y un Data Lakehouse son arquitecturas destinadas a almacenar y
+procesar grandes volúmenes de información. Aunque comparten ciertos principios,
+se diferencian en el grado de administración, confiabilidad y rendimiento que
+ofrecen. El presente trabajo explica sus características, arquitecturas,
+ventajas, desafíos y casos de uso principales.
+
+\section*{1. ¿Qué es un Data Lake?}
+
+Un \textit{Data Lake} es un repositorio centralizado y escalable que permite
+almacenar grandes cantidades de datos estructurados, semiestructurados y no
+estructurados en su formato original o casi original. A diferencia de una base
+de datos tradicional, no exige definir toda la estructura de la información
+antes de almacenarla.
+
+Generalmente utiliza el principio \textit{schema-on-read}: el esquema se aplica
+cuando los datos se consultan o analizan, no cuando se incorporan. Esto permite
+conservar información para usos futuros, incluso cuando todavía no se conoce su
+propósito analítico.
+
+\section*{2. Características de un Data Lake}
+
+Las principales características de un Data Lake son las siguientes:
+
+\begin{itemize}
+    \item Almacena datos estructurados, semiestructurados y no estructurados.
+    \item Conserva los datos crudos o con un nivel mínimo de transformación.
+    \item Puede manejar grandes volúmenes de información.
+    \item Admite cargas por lotes y flujos de datos en tiempo real.
+    \item Utiliza almacenamiento distribuido o almacenamiento de objetos en la nube.
+    \item Aplica el esquema al momento de la lectura.
+    \item Permite utilizar diferentes motores de procesamiento sobre los mismos datos.
+    \item Favorece la exploración, la analítica avanzada y el aprendizaje automático.
+    \item Puede organizarse en zonas según la calidad, sensibilidad y grado de procesamiento de la información.
+    \item Requiere catálogo, metadatos, seguridad y gobierno para evitar que se convierta en un pantano de datos.
+\end{itemize}
+
+\section*{3. Arquitectura de un Data Lake}
+
+Una arquitectura típica de Data Lake contiene las siguientes capas:
+
+\begin{enumerate}
+    \item \textbf{Fuentes de datos.} Bases de datos, aplicaciones, archivos,
+    sensores, redes sociales, registros de sistemas y servicios externos.
+
+    \item \textbf{Ingestión.} Recibe los datos mediante procesos por lotes o
+    transmisiones en tiempo real.
+
+    \item \textbf{Almacenamiento.} Conserva la información en sistemas
+    distribuidos o en almacenamiento de objetos.
+
+    \item \textbf{Zonas de datos.} La zona de aterrizaje o \textit{raw}
+    conserva los datos originales; la zona de trabajo se utiliza para
+    experimentación y transformación; la zona sensible protege información
+    restringida; y la zona de producción o \textit{gold} contiene datos
+    limpios, validados y documentados.
+
+    \item \textbf{Procesamiento.} Incluye los motores que limpian,
+    transforman, combinan y analizan los datos.
+
+    \item \textbf{Catálogo y gobierno.} Administra metadatos, permisos,
+    linaje, calidad, auditoría y políticas de conservación.
+
+    \item \textbf{Consumo.} Proporciona información a herramientas de
+    inteligencia de negocios, reportes, ciencia de datos, inteligencia
+    artificial y aplicaciones.
+\end{enumerate}
+
+El flujo general puede resumirse como: fuentes, ingestión, almacenamiento por
+zonas, procesamiento y consumo. La seguridad, el catálogo y el gobierno son
+componentes transversales a todas las capas.
+
+\section*{4. Diferencias entre un Data Lake y un Data Warehouse}
+
+Las diferencias principales son:
+
+\begin{itemize}
+    \item \textbf{Estado de los datos:} el Data Lake conserva datos crudos o
+    parcialmente procesados, mientras que el Data Warehouse contiene datos
+    limpios, estructurados y modelados.
+
+    \item \textbf{Tipos de datos:} el lago admite información estructurada,
+    semiestructurada y no estructurada; el almacén trabaja principalmente con
+    datos estructurados.
+
+    \item \textbf{Esquema:} el Data Lake suele emplear
+    \textit{schema-on-read}; el Data Warehouse utiliza
+    \textit{schema-on-write}, por lo que el modelo se define antes de cargar.
+
+    \item \textbf{Procesamiento:} en el lago predominan ELT y las
+    transformaciones bajo demanda; en el almacén tradicional se utiliza ETL
+    antes de cargar la información.
+
+    \item \textbf{Uso:} el Data Lake es apropiado para exploración, ciencia de
+    datos, inteligencia artificial y aprendizaje automático. El Data Warehouse
+    está optimizado para reportes, indicadores e inteligencia de negocios.
+
+    \item \textbf{Usuarios:} el lago es utilizado principalmente por
+    ingenieros, analistas y científicos de datos; el almacén está orientado a
+    analistas de negocio y responsables de la toma de decisiones.
+
+    \item \textbf{Costo y flexibilidad:} el Data Lake ofrece almacenamiento
+    económico y flexible. El Data Warehouse normalmente tiene un costo mayor,
+    pero ofrece consultas SQL más rápidas y predecibles.
+\end{itemize}
+
+\section*{5. Ventajas de los Data Lakes}
+
+\begin{itemize}
+    \item Almacenan grandes volúmenes de datos a un costo relativamente bajo.
+    \item Admiten prácticamente cualquier tipo y formato de información.
+    \item Facilitan la incorporación rápida de datos sin transformaciones previas complejas.
+    \item Conservan el detalle original para realizar nuevos análisis.
+    \item Favorecen la experimentación y el descubrimiento de patrones.
+    \item Son apropiados para inteligencia artificial y aprendizaje automático.
+    \item Reducen la pérdida de información que podría ser útil en el futuro.
+    \item Permiten utilizar diferentes herramientas sobre los mismos archivos.
+    \item Favorecen el autoservicio cuando cuentan con un catálogo y gobierno adecuados.
+    \item Pueden escalar de forma elástica en plataformas de nube.
+\end{itemize}
+
+\section*{6. Riesgos o desafíos de los Data Lakes}
+
+El principal riesgo es que el repositorio se convierta en un \textit{Data
+Swamp} o pantano de datos: un entorno lleno de información oscura, duplicada,
+sin documentación y difícil de utilizar.
+
+Otros desafíos importantes son:
+
+\begin{itemize}
+    \item Baja calidad o falta de validación de los datos.
+    \item Ausencia de metadatos y dificultad para encontrar información.
+    \item Acceso indebido a datos sensibles.
+    \item Falta de gobierno, linaje y responsables claramente definidos.
+    \item Duplicación de conjuntos de datos.
+    \item Rendimiento poco predecible para algunas consultas.
+    \item Crecimiento descontrolado de los costos de almacenamiento y procesamiento.
+    \item Necesidad de personal especializado.
+    \item Problemas de soberanía, privacidad y cumplimiento normativo.
+    \item Incompatibilidades entre herramientas y formatos.
+    \item Falta de participación de los usuarios de negocio.
+\end{itemize}
+
+\section*{7. Implementación de un Data Lake}
+
+Una implementación recomendable comprende los siguientes pasos:
+
+\begin{enumerate}
+    \item Definir los objetivos del negocio y los casos de uso prioritarios.
+    \item Conseguir patrocinio directivo y participación de las áreas involucradas.
+    \item Identificar las fuentes y clasificar los datos según su sensibilidad.
+    \item Elegir una plataforma local, en la nube o híbrida.
+    \item Diseñar las zonas de datos y sus políticas de gobierno.
+    \item Crear procesos de ingestión por lotes y en tiempo real.
+    \item Implementar catálogo, metadatos, linaje y reglas de calidad.
+    \item Configurar seguridad, cifrado, permisos y auditoría.
+    \item Proporcionar herramientas de preparación, análisis y autoservicio.
+    \item Comenzar con un caso de uso pequeño y medible.
+    \item Evaluar los resultados y extender gradualmente la plataforma.
+    \item Monitorear costos, calidad, rendimiento y cumplimiento.
+\end{enumerate}
+
+La construcción puede resumirse en cuatro etapas generales: levantar la
+infraestructura, organizar el lago, habilitar el autoservicio y abrirlo
+progresivamente a los usuarios.
+
+\section*{8. ¿Qué es un Data Lakehouse?}
+
+Un \textit{Data Lakehouse} es una arquitectura que combina la flexibilidad,
+escalabilidad y bajo costo de un Data Lake con la confiabilidad, el rendimiento
+y las capacidades de administración de un Data Warehouse.
+
+El Lakehouse mantiene los datos en almacenamiento económico y, normalmente, en
+formatos abiertos, pero incorpora una capa de tablas y metadatos que permite
+realizar transacciones, controlar esquemas, gobernar la información y ejecutar
+consultas analíticas con mayor rendimiento. De esta manera, una misma plataforma
+puede atender inteligencia de negocios, ingeniería de datos, ciencia de datos e
+inteligencia artificial.
+
+\section*{9. Principales características de un Data Lakehouse}
+
+\begin{itemize}
+    \item Almacenamiento escalable y económico.
+    \item Soporte para datos estructurados, semiestructurados y no estructurados.
+    \item Uso de formatos abiertos, como Apache Parquet.
+    \item Capa de tablas y metadatos sobre los archivos.
+    \item Transacciones ACID: atomicidad, consistencia, aislamiento y durabilidad.
+    \item Validación y evolución de esquemas.
+    \item Historial, versionamiento y \textit{time travel}.
+    \item Procesamiento por lotes y en tiempo real.
+    \item Consultas SQL de alto rendimiento.
+    \item Gobierno, seguridad, auditoría y linaje unificados.
+    \item Compatibilidad con BI, ciencia de datos, aprendizaje automático e IA.
+    \item Separación entre el almacenamiento y la capacidad de cómputo.
+\end{itemize}
+
+Tecnologías como Delta Lake, Apache Iceberg y Apache Hudi proporcionan varias
+de estas capacidades. En particular, la capa de metadatos permite controlar qué
+archivos forman parte de cada versión de una tabla y ofrecer transacciones ACID,
+evolución de esquemas y recuperación de versiones.
+
+\section*{10. Arquitectura de un Data Lakehouse}
+
+Una arquitectura de Data Lakehouse puede organizarse de la siguiente manera:
+
+\begin{enumerate}
+    \item \textbf{Fuentes:} aplicaciones, bases de datos, dispositivos,
+    archivos y servicios externos.
+
+    \item \textbf{Ingestión:} procesos por lotes, replicación y transmisión en
+    tiempo real.
+
+    \item \textbf{Almacenamiento de objetos:} repositorio económico para los
+    diferentes tipos de datos.
+
+    \item \textbf{Formato de tablas:} tecnologías como Delta Lake, Apache
+    Iceberg o Apache Hudi organizan los archivos en tablas administradas.
+
+    \item \textbf{Capa de metadatos:} controla versiones, transacciones,
+    esquemas y archivos.
+
+    \item \textbf{Procesamiento:} motores SQL, Apache Spark, herramientas de
+    transmisión y plataformas de aprendizaje automático.
+
+    \item \textbf{Catálogo y gobierno:} administra permisos, linaje,
+    auditoría, calidad y descubrimiento.
+
+    \item \textbf{Consumo:} proporciona información para tableros, reportes,
+    analítica, IA, aprendizaje automático y aplicaciones.
+\end{enumerate}
+
+Con frecuencia se emplea una arquitectura de medallón. La capa bronce conserva
+los datos originales; la capa plata contiene datos depurados, integrados y
+validados; y la capa oro contiene datos agregados y preparados para el negocio.
+
+\section*{11. Diferencias entre un Data Lake y un Data Lakehouse}
+
+\begin{itemize}
+    \item \textbf{Organización:} el Data Lake suele administrar archivos y
+    objetos, mientras que el Lakehouse presenta tablas administradas sobre esos
+    archivos.
+
+    \item \textbf{Transacciones:} un lago tradicional generalmente no ofrece
+    garantías ACID; el Lakehouse sí las proporciona.
+
+    \item \textbf{Esquema y calidad:} en el lago, estos controles dependen de
+    procesos adicionales; en el Lakehouse existen mecanismos de aplicación y
+    evolución de esquemas.
+
+    \item \textbf{Versionamiento:} el Lakehouse ofrece historial y
+    \textit{time travel}, características que no siempre existen en un lago
+    tradicional.
+
+    \item \textbf{Rendimiento:} el Data Lake puede presentar un rendimiento
+    variable, mientras que el Lakehouse incorpora optimizaciones para consultas
+    SQL.
+
+    \item \textbf{Gobierno:} en el lago puede estar fragmentado; el Lakehouse
+    busca centralizar catálogo, seguridad, linaje y auditoría.
+
+    \item \textbf{Cargas de trabajo:} el Data Lake es adecuado para
+    exploración e IA. El Lakehouse permite utilizar los mismos datos también
+    para inteligencia de negocios y reportes empresariales.
+
+    \item \textbf{Complejidad:} un lago básico puede ser más sencillo de
+    implementar, mientras que el Lakehouse exige una capa transaccional y de
+    gobierno más completa.
+\end{itemize}
+
+En síntesis, el Lakehouse no elimina el almacenamiento del lago: agrega
+capacidades de administración y confiabilidad directamente sobre él.
+
+\section*{12. Ventajas de los Data Lakehouse}
+
+\begin{itemize}
+    \item Unifican inteligencia de negocios, ciencia de datos, procesamiento e IA.
+    \item Reducen la necesidad de mantener un Data Lake y un Data Warehouse separados.
+    \item Evitan copias innecesarias de información.
+    \item Disminuyen procesos ETL y problemas de desactualización.
+    \item Mejoran la calidad y consistencia mediante transacciones ACID.
+    \item Permiten aplicar y evolucionar esquemas.
+    \item Proporcionan historial, auditoría y recuperación de versiones.
+    \item Aprovechan almacenamiento económico y escalable.
+    \item Ofrecen mejor rendimiento para consultas SQL.
+    \item Simplifican la seguridad, el catálogo, el gobierno y el linaje.
+    \item Promueven formatos abiertos e interoperabilidad.
+    \item Facilitan el procesamiento por lotes y en tiempo real.
+\end{itemize}
+
+Al trabajar sobre una única plataforma se reduce la duplicación de datos y la
+complejidad operativa causada por mantener un lago y un almacén independientes.
+
+\section*{13. Casos de uso recomendados}
+
+\subsection*{Casos apropiados para un Data Lake}
+
+Se recomienda utilizar un Data Lake cuando:
+
+\begin{itemize}
+    \item Se necesita conservar grandes cantidades de datos crudos.
+    \item Todavía no se conocen todos los usos futuros de la información.
+    \item Existen imágenes, audio, video, registros, documentos o datos de sensores.
+    \item Los científicos de datos requieren información con el mayor nivel de detalle.
+    \item Se desarrollan proyectos exploratorios de IA o aprendizaje automático.
+    \item Se necesita un archivo histórico económico.
+    \item El rendimiento SQL transaccional no es el requisito principal.
+\end{itemize}
+
+Algunos ejemplos son los datos de Internet de las cosas, registros de
+navegación, archivos multimedia, investigación científica, análisis
+exploratorio y almacenamiento histórico.
+
+\subsection*{Casos apropiados para un Data Lakehouse}
+
+Se recomienda utilizar un Data Lakehouse cuando:
+
+\begin{itemize}
+    \item La organización necesita BI, analítica avanzada e IA sobre los mismos datos.
+    \item Los datos deben actualizarse de manera confiable.
+    \item Se requieren transacciones, control de esquemas y versionamiento.
+    \item Es necesario combinar cargas por lotes y flujos en tiempo real.
+    \item Se desea reducir duplicaciones entre el lago y el almacén de datos.
+    \item Existen requisitos estrictos de seguridad, auditoría, linaje y calidad.
+    \item Diferentes equipos necesitan una fuente de datos común y gobernada.
+\end{itemize}
+
+Algunos ejemplos son la detección de fraude, la personalización de clientes, el
+mantenimiento predictivo, el análisis financiero, el comercio electrónico, las
+telecomunicaciones y el análisis clínico con controles de privacidad.
+
+En conclusión, el Data Lake resulta conveniente para conservar y explorar datos
+diversos con máxima flexibilidad. El Data Lakehouse es preferible cuando esa
+flexibilidad debe combinarse con confiabilidad, gobierno y rendimiento para
+aplicaciones empresariales.

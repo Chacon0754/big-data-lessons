@@ -1,0 +1,301 @@
+\section*{Data Pipelines}
+
+Los datos se generan en bases de datos, aplicaciones, sensores, archivos,
+servicios web y plataformas externas. Para que puedan utilizarse en análisis,
+reportes, automatización o modelos de inteligencia artificial, es necesario
+transportarlos y prepararlos de manera confiable. Los Data Pipelines permiten
+automatizar este recorrido desde las fuentes hasta los sistemas que consumen la
+información.
+
+\section*{1. ¿Qué es un Data Pipeline?}
+
+Un \textit{Data Pipeline} es un conjunto organizado y automatizado de procesos
+que mueve datos desde una o varias fuentes hasta uno o varios destinos. Durante
+el recorrido, la información puede ser validada, filtrada, limpiada,
+transformada, enriquecida, combinada y almacenada.
+
+Cada etapa recibe una entrada, realiza una operación y genera una salida que
+sirve como entrada para la siguiente etapa. Dependiendo de las necesidades del
+negocio, el flujo puede ejecutarse en horarios definidos, activarse cuando
+ocurre un evento o procesar datos continuamente. Su finalidad es entregar
+información correcta, oportuna y utilizable a sistemas analíticos u
+operacionales.
+
+\section*{2. ¿Cuáles son los tipos de Data Pipeline?}
+
+Los Data Pipelines pueden clasificarse de distintas maneras.
+
+\subsection*{Según la forma de procesamiento}
+
+\begin{itemize}
+    \item \textbf{Pipeline por lotes:} acumula datos durante un periodo y los
+    procesa juntos en intervalos programados. Es apropiado para reportes
+    históricos, cierres diarios, facturación y cargas nocturnas.
+
+    \item \textbf{Pipeline de streaming:} procesa los datos de forma continua
+    conforme se generan. Se utiliza cuando se requieren resultados con baja
+    latencia, por ejemplo, para detectar fraude o monitorear sensores.
+
+    \item \textbf{Pipeline de micro-lotes:} agrupa pequeñas cantidades de datos
+    durante intervalos muy cortos. Representa un punto intermedio entre el
+    procesamiento por lotes y el streaming continuo.
+
+    \item \textbf{Pipeline híbrido:} combina procesos por lotes y streaming.
+    Puede utilizar datos históricos para generar contexto y eventos recientes
+    para producir respuestas inmediatas.
+\end{itemize}
+
+\subsection*{Según el orden de las transformaciones}
+
+\begin{itemize}
+    \item \textbf{ETL:} primero extrae, después transforma y finalmente carga
+    los datos en el destino.
+
+    \item \textbf{ELT:} extrae y carga rápidamente los datos originales; las
+    transformaciones se ejecutan posteriormente dentro del sistema de destino.
+\end{itemize}
+
+\subsection*{Según el mecanismo de activación}
+
+\begin{itemize}
+    \item \textbf{Programado:} se ejecuta a una hora o con una frecuencia definida.
+    \item \textbf{Controlado por eventos:} comienza cuando ocurre un evento determinado.
+    \item \textbf{CDC:} utiliza captura de cambios para transportar únicamente las inserciones, actualizaciones y eliminaciones de una fuente.
+\end{itemize}
+
+\section*{3. ¿Cuáles son los elementos o componentes de un Data Pipeline?}
+
+Los componentes principales son:
+
+\begin{enumerate}
+    \item \textbf{Fuentes de datos.} Son los sistemas donde se origina la
+    información, como bases de datos, aplicaciones empresariales, API, archivos,
+    dispositivos IoT, registros y servicios en la nube.
+
+    \item \textbf{Conectores e ingestión.} Extraen o reciben los datos y los
+    incorporan al pipeline. La ingestión puede realizarse por lotes, streaming o
+    captura de cambios.
+
+    \item \textbf{Transporte o mensajería.} Mueve eventos entre componentes y
+    puede actuar como búfer para desacoplar productores y consumidores.
+
+    \item \textbf{Procesamiento y transformación.} Limpia, valida, filtra,
+    estandariza, agrega, combina y enriquece la información.
+
+    \item \textbf{Almacenamiento temporal.} Conserva datos de manera
+    intermedia para absorber variaciones de carga, permitir reintentos o
+    mantener puntos de control.
+
+    \item \textbf{Destino o \textit{sink}.} Es el sistema que recibe el
+    resultado, por ejemplo, una base de datos, un Data Warehouse, un Data Lake,
+    un Lakehouse, una aplicación o un modelo de aprendizaje automático.
+
+    \item \textbf{Orquestación.} Define dependencias, orden de ejecución,
+    horarios, reintentos y condiciones entre las tareas.
+
+    \item \textbf{Calidad y validación.} Comprueba formatos, rangos, reglas de
+    negocio, duplicados, valores faltantes e integridad.
+
+    \item \textbf{Monitoreo y observabilidad.} Registra métricas, tiempos,
+    errores, volumen, retraso y estado de cada etapa.
+
+    \item \textbf{Metadatos, linaje y gobierno.} Documenta el origen, las
+    transformaciones, los responsables y el destino de los datos.
+
+    \item \textbf{Seguridad.} Incluye autenticación, autorización, cifrado,
+    enmascaramiento, auditoría y protección de datos sensibles.
+\end{enumerate}
+
+\section*{4. Estructura de una arquitectura de Data Pipeline}
+
+La estructura general de una arquitectura de Data Pipeline puede representarse
+de la siguiente manera:
+
+\begin{center}
+\textbf{Fuentes} $\longrightarrow$ \textbf{Ingestión}
+$\longrightarrow$ \textbf{Transporte}
+$\longrightarrow$ \textbf{Procesamiento}
+$\longrightarrow$ \textbf{Almacenamiento o consumo}
+\end{center}
+
+\begin{enumerate}
+    \item \textbf{Capa de fuentes:} contiene sistemas transaccionales,
+    aplicaciones, archivos, API, sensores, registros y servicios externos.
+
+    \item \textbf{Capa de ingestión:} extrae o recibe los datos sin afectar el
+    funcionamiento de las fuentes. Puede aplicar cargas completas, cargas
+    incrementales o captura de cambios.
+
+    \item \textbf{Capa de transporte:} utiliza colas o plataformas de eventos
+    para entregar la información de forma ordenada y resistente a fallas.
+
+    \item \textbf{Capa de procesamiento:} ejecuta reglas de transformación,
+    limpieza, integración, agregación y enriquecimiento. Puede trabajar con
+    lotes o flujos continuos.
+
+    \item \textbf{Capa de almacenamiento:} guarda datos crudos, intermedios o
+    procesados en bases de datos, almacenes analíticos, lagos o Lakehouses.
+
+    \item \textbf{Capa de servicio y consumo:} entrega los resultados a
+    tableros, reportes, aplicaciones, API, sistemas de alertas y modelos de
+    inteligencia artificial.
+\end{enumerate}
+
+La orquestación, seguridad, calidad, metadatos, linaje y observabilidad deben
+funcionar de manera transversal. Una arquitectura robusta también incluye una
+ruta para los registros que no pueden procesarse, reintentos controlados y
+mecanismos para reiniciar el flujo sin perder ni duplicar información.
+
+\section*{5. Características de un Data Pipeline}
+
+Un Data Pipeline moderno debe poseer las siguientes características:
+
+\begin{itemize}
+    \item \textbf{Automatización:} minimiza tareas manuales y ejecuta el flujo de manera repetible.
+    \item \textbf{Escalabilidad:} aumenta su capacidad ante mayores volúmenes o velocidades de datos.
+    \item \textbf{Confiabilidad:} entrega información completa y consistente.
+    \item \textbf{Tolerancia a fallas:} utiliza reintentos, puntos de control y recuperación automática.
+    \item \textbf{Baja latencia:} procesa los datos con la rapidez requerida por el caso de uso.
+    \item \textbf{Idempotencia:} evita resultados distintos cuando una operación debe repetirse.
+    \item \textbf{Calidad de datos:} incorpora validación, limpieza y manejo de registros incorrectos.
+    \item \textbf{Observabilidad:} proporciona métricas, registros, alertas y trazabilidad.
+    \item \textbf{Seguridad:} protege la información durante el transporte, procesamiento y almacenamiento.
+    \item \textbf{Modularidad:} divide el flujo en componentes que pueden mantenerse y sustituirse con facilidad.
+    \item \textbf{Interoperabilidad:} conecta tecnologías, formatos y plataformas diferentes.
+    \item \textbf{Gobierno:} documenta propiedad, linaje, reglas y uso de la información.
+\end{itemize}
+
+No todos los pipelines necesitan procesamiento exactamente una vez. La garantía
+de entrega debe seleccionarse según el riesgo del caso de uso: una alerta de
+fraude o un movimiento financiero requiere controles más estrictos que una
+carga estadística que puede reconstruirse.
+
+\section*{6. Ventajas del uso de Data Pipelines}
+
+\begin{itemize}
+    \item Automatizan la recolección, movimiento y preparación de los datos.
+    \item Reducen errores provocados por actividades manuales.
+    \item Entregan información más reciente a usuarios y aplicaciones.
+    \item Mejoran la consistencia y calidad de los datos.
+    \item Integran fuentes aisladas y disminuyen los silos de información.
+    \item Permiten reutilizar procesos de transformación.
+    \item Facilitan el crecimiento de las plataformas de datos.
+    \item Proporcionan trazabilidad desde el origen hasta el destino.
+    \item Aceleran la elaboración de reportes y productos de datos.
+    \item Habilitan análisis en tiempo real y decisiones oportunas.
+    \item Suministran datos preparados para inteligencia artificial y aprendizaje automático.
+    \item Reducen costos operativos cuando se diseñan y monitorean adecuadamente.
+\end{itemize}
+
+\section*{7. ¿Por qué son necesarios los Data Pipelines?}
+
+Los Data Pipelines son necesarios porque los datos suelen encontrarse
+distribuidos entre sistemas con estructuras, velocidades y formatos diferentes.
+Moverlos manualmente resulta lento, propenso a errores y difícil de repetir a
+gran escala. Además, la información cruda rara vez está lista para utilizarse
+directamente.
+
+Un pipeline establece un proceso controlado para integrar fuentes, aplicar
+reglas de calidad y entregar datos a los consumidores adecuados. Esto permite
+que las áreas de negocio trabajen con información actualizada, que las
+aplicaciones intercambien datos y que los modelos de inteligencia artificial
+reciban entradas confiables.
+
+También son necesarios para cumplir niveles de servicio y requisitos de
+seguridad. Mediante el monitoreo, linaje y registro de errores, una organización
+puede conocer qué ocurrió con cada conjunto de datos y corregir fallas antes de
+que afecten decisiones o procesos operativos.
+
+\section*{8. Diferencia entre un Data Pipeline y un proceso ETL}
+
+ETL significa \textit{Extract, Transform, Load}: extraer, transformar y cargar.
+Es un patrón específico en el que los datos se extraen de las fuentes, se
+transforman antes de llegar al destino y finalmente se cargan. Tradicionalmente
+se asocia con cargas por lotes hacia un Data Warehouse, aunque también puede
+implementarse en tiempo real.
+
+Un Data Pipeline es un concepto más amplio. Puede incluir un proceso ETL, pero
+también puede:
+
+\begin{itemize}
+    \item Mover datos sin transformarlos.
+    \item Utilizar el patrón ELT y transformar después de la carga.
+    \item Procesar eventos continuamente.
+    \item Conectar varias fuentes y varios destinos.
+    \item Ejecutar algoritmos, validaciones o modelos de aprendizaje automático.
+    \item Alimentar aplicaciones operacionales, alertas y servicios, no solamente almacenes de datos.
+    \item Incluir orquestación, monitoreo, linaje, seguridad y recuperación ante fallas.
+\end{itemize}
+
+Por lo tanto, todo proceso ETL puede considerarse un Data Pipeline, pero no todo
+Data Pipeline es un proceso ETL.
+
+\section*{9. Casos de uso comunes de los Data Pipelines}
+
+\begin{itemize}
+    \item \textbf{Inteligencia de negocios:} consolidar información en un Data Warehouse para elaborar indicadores y tableros.
+    \item \textbf{Data Lakes y Lakehouses:} ingerir datos crudos y producir conjuntos depurados para análisis.
+    \item \textbf{Replicación mediante CDC:} mantener sincronizadas bases de datos y plataformas analíticas.
+    \item \textbf{Detección de fraude:} evaluar transacciones en tiempo real y generar alertas.
+    \item \textbf{Comercio electrónico:} actualizar inventarios, pedidos, precios y recomendaciones.
+    \item \textbf{Internet de las cosas:} procesar telemetría de sensores, vehículos y maquinaria.
+    \item \textbf{Monitoreo de sistemas:} recolectar registros y métricas para detectar fallas o amenazas.
+    \item \textbf{Aprendizaje automático:} preparar datos de entrenamiento, generar variables y alimentar predicciones.
+    \item \textbf{Migraciones:} trasladar información entre sistemas locales y plataformas de nube.
+    \item \textbf{Vista integral del cliente:} combinar datos de ventas, atención, marketing y navegación.
+    \item \textbf{Salud:} integrar expedientes, dispositivos y resultados clínicos bajo controles de privacidad.
+    \item \textbf{IA generativa:} actualizar repositorios documentales y bases vectoriales utilizadas por soluciones RAG.
+\end{itemize}
+
+\section*{10. Tecnologías o herramientas utilizadas para construir Data Pipelines}
+
+La selección de herramientas depende del volumen, latencia, fuentes, destinos,
+presupuesto y conocimientos del equipo. Algunas opciones comunes son:
+
+\begin{itemize}
+    \item \textbf{Ingestión y conectores:} Apache NiFi, Airbyte, Fivetran,
+    Kafka Connect, Debezium y Striim.
+
+    \item \textbf{Mensajería y eventos:} Apache Kafka, Apache Pulsar,
+    RabbitMQ, Amazon Kinesis, Azure Event Hubs y Google Pub/Sub.
+
+    \item \textbf{Procesamiento distribuido:} Apache Spark, Apache Flink,
+    Apache Beam y Hazelcast.
+
+    \item \textbf{Orquestación:} Apache Airflow, Dagster, Prefect, Azure Data
+    Factory y AWS Glue Workflows.
+
+    \item \textbf{Transformación:} SQL, dbt, Python, Pandas y herramientas
+    administradas de integración.
+
+    \item \textbf{Almacenamiento:} PostgreSQL, Amazon S3, Azure Data Lake
+    Storage, Google Cloud Storage, Snowflake, BigQuery, Redshift y Databricks.
+
+    \item \textbf{Calidad de datos:} Great Expectations, Soda y Deequ.
+
+    \item \textbf{Catálogo y linaje:} DataHub, OpenMetadata, Apache Atlas y
+    OpenLineage.
+
+    \item \textbf{Monitoreo:} Prometheus, Grafana, herramientas de registro y
+    servicios de observabilidad de los proveedores de nube.
+
+    \item \textbf{Contenedores e infraestructura:} Docker, Kubernetes y
+    herramientas de infraestructura como código.
+\end{itemize}
+
+No existe una herramienta universalmente superior. Una arquitectura sencilla,
+observable y acorde con las necesidades reales suele ser preferible a combinar
+muchas tecnologías sin una justificación clara. Antes de elegir una plataforma
+se deben definir la latencia esperada, el volumen, las garantías de entrega, la
+seguridad, el costo y la experiencia del equipo.
+
+\section*{Conclusión}
+
+Los Data Pipelines constituyen la infraestructura que conecta la generación de
+datos con su utilización. Su valor no se limita a transportar información:
+también automatizan transformaciones, aplican controles de calidad, proporcionan
+trazabilidad y permiten responder ante fallas. Un pipeline bien diseñado debe
+ser escalable, seguro, observable y adecuado a la latencia del caso de uso. La
+elección entre lotes, streaming, ETL, ELT o una arquitectura híbrida debe partir
+de las necesidades del negocio y no solamente de la disponibilidad de una
+tecnología.

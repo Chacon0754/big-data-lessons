@@ -1,0 +1,515 @@
+\section{Introducción}
+
+En esta actividad se desarrollará un Data Pipeline orientado a eventos
+utilizando Apache Kafka. El pipeline obtendrá información de tres API públicas:
+The Simpsons API, PokéAPI y Random User API.
+
+Un productor desarrollado en Python consultará las fuente de datos y publicará
+los resultados en tres tópicos independientes de Kafka. Posteriormente, un
+consumidor en Python procesará los mensajes y almacenará la información en una
+base de datos MongoDB.
+
+Los servicios principales serán ejecutados mediante contenedores Docker para
+facilitar la configuración, ejecución y reproducción del proyecto.
+
+\section{Objetivo}
+
+Implementar un Data Pipeline que permita extraer datos desde tres API públicas,
+transportarlos mediante tópicos de Apache Kafka, procesarlos con un consumidor
+desarrollado en Python y almacenarlos finalmente en MongoDB.
+
+\section{Arquitectura del Data Pipeline}
+
+\begin{center}
+    \textbf{API públicas}
+    $\longrightarrow$
+    \textbf{Productor Python}
+    $\longrightarrow$
+    \textbf{Apache Kafka}
+    $\longrightarrow$
+    \textbf{Consumidor Python}
+    $\longrightarrow$
+    \textbf{MongoDB}
+\end{center}
+
+\begin{itemize}
+    \item The Simpsons API: tópico \texttt{simpsons.characters}.
+    \item PokéAPI: tópico \texttt{pokemon.data}.
+    \item Random User API: tópico \texttt{randomuser.data}.
+\end{itemize}
+
+\section{Desarrollo}
+
+\subsection{Preparación del proyecto}
+
+Se creó una carpeta independiente para almacenar la configuración de Docker,
+los programas desarrollados en Python y las evidencias obtenidas durante la
+ejecución del pipeline.
+
+
+\subsection{Configuración de la infraestructura}
+
+La infraestructura se definió mediante el archivo \texttt{compose.yaml}. Se
+utilizó la imagen oficial de Apache Kafka 4.3.1 en modo KRaft, por lo que no fue
+necesario desplegar Apache ZooKeeper.
+
+Para el entorno de desarrollo se configuró un único nodo de Kafka que desempeña
+simultáneamente las funciones de broker y controlador. El broker expone un
+listener externo en el puerto 9092 para las conexiones realizadas desde el
+equipo anfitrión y un listener interno para la comunicación entre los
+contenedores.
+
+También se configuró un servicio de MongoDB con almacenamiento persistente. Las
+credenciales y el nombre de la base de datos se definieron mediante variables de
+entorno almacenadas en el archivo \texttt{.env}.
+
+Se añadieron comprobaciones de salud para verificar automáticamente que Kafka y
+MongoDB se encuentren disponibles antes de iniciar los demás componentes del
+pipeline.
+
+\subsubsection{Puesta en marcha de la infraestructura}
+
+Los servicios se iniciaron en segundo plano mediante Docker Compose. Apache
+Kafka se ejecutó con la imagen oficial en modo KRaft, mientras que MongoDB se
+desplegó como destino persistente de los datos procesados.
+
+Para esta práctica, Kafka utiliza almacenamiento efímero dentro de su
+contenedor. Esta decisión simplifica el entorno local y no afecta la
+demostración del pipeline. MongoDB utiliza un volumen de Docker para conservar
+los documentos almacenados.
+
+La comprobación de estado confirmó que ambos servicios se encontraban
+saludables. Kafka publicó el puerto 9092 y MongoDB el puerto 27017 en el equipo
+anfitrión.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/kafka-data-pipeline/screenshots/ss-01.png}
+    \caption{Servicios de Apache Kafka y MongoDB activos y saludables.}
+    \label{fig:infrastructure-services}
+\end{figure}
+
+\subsection{Creación de los tópicos de Kafka}
+
+Se crearon tres tópicos independientes para mantener separados los eventos producidos por cada fuente de datos:
+
+\begin{itemize}
+    \item \texttt{simpsons.characters}: datos obtenidos de The Simpsons API.
+    \item \texttt{pokemon.data}: datos obtenidos de PokeAPI.
+    \item \texttt{randomuser.data}: datos obtenidos de Random User API.
+\end{itemize}
+
+Cada tópico se configuró con una partición y un factor de replicación igual a 
+uno.
+
+Posteriormente se consultó la descripción de cada tópico para comprobar su 
+existencia, número de particiones y factor de replicación.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/kafka-data-pipeline/screenshots/ss-02.png}
+    \caption{Tópicos creados para las tres fuentes de datos.}
+    \label{fig:kafka-topics}
+\end{figure}
+
+\subsection{Preparación del entorno Python}
+
+Se creó un archivo \texttt{requirements.txt} con las bibliotecas necesarias
+para consultar las API, comunicarse con Apache Kafka y almacenar documentos en
+MongoDB.
+
+Se utilizó la biblioteca \texttt{requests} para realizar las solicitudes HTTP,
+\texttt{confluent-kafka} como cliente de Kafka y \texttt{pymongo} como
+controlador de MongoDB.
+
+La aplicación se empaquetó mediante un \texttt{Dockerfile} basado en una imagen
+ligera de Python. Como medida de seguridad, el productor y el consumidor se
+ejecutarán dentro del contenedor con un usuario sin privilegios administrativos.
+
+También se agregaron los archivos \texttt{.dockerignore},
+\texttt{.gitignore} y \texttt{.env.example} para excluir credenciales y archivos
+innecesarios, así como para documentar las variables de entorno requeridas.
+
+\subsection{Implementación del productor}
+
+El productor se desarrolló en Python utilizando las bibliotecas
+\texttt{requests} y \texttt{confluent-kafka}. Su función consiste en consultar
+las tres API públicas, seleccionar los campos relevantes y publicar los datos
+en Apache Kafka.
+
+Cada evento se representa mediante un documento JSON que contiene un
+identificador único, el nombre de la fuente, la fecha y hora de producción en
+UTC y los datos recuperados de la API.
+
+El productor se configuró para realizar tres rondas. En cada ronda se obtuvo un
+registro de The Simpsons API, uno de PokéAPI y uno de Random User API. De esta
+manera se produjeron nueve eventos en total.
+
+Los mensajes se enviaron a los siguientes tópicos:
+
+\begin{itemize}
+    \item \texttt{simpsons.characters}
+    \item \texttt{pokemon.data}
+    \item \texttt{randomuser.data}
+\end{itemize}
+
+La confirmación proporcionada por el cliente de Kafka permitió comprobar el
+tópico, la partición y el offset asignado a cada evento.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]
+    {\actividadactual/kafka-data-pipeline/screenshots/ss-03.png}
+    \caption{Productor publicando eventos obtenidos de las tres API.}
+    \label{fig:python-producer}
+\end{figure}
+
+\subsubsection{Verificación de los eventos publicados}
+
+Después de ejecutar el productor, se utilizó el consumidor de consola incluido
+en Apache Kafka para leer directamente un evento de cada tópico. Esta
+comprobación permitió confirmar que los mensajes fueron almacenados
+correctamente y que cada documento JSON conserva su identificador, fuente,
+fecha de producción y carga de datos.
+
+\subsection{Implementación del consumidor}
+
+Se desarrolló un consumidor en Python encargado de leer los eventos publicados en los tres topics de Kafka y almacenarlos en MongoDB. Para mantener separados los datos de cada fuente, se utilizó la siguiente correspondencia:
+
+\begin{itemize}
+    \item \texttt{simpsons.characters}: colección \texttt{simpsons\_characters}.
+    \item \texttt{pokemon.data}: colección \texttt{pokemon}.
+    \item \texttt{randomuser.data}: colección \texttt{random\_users}.
+\end{itemize}
+
+El consumidor fue configurado con un grupo denominado \texttt{mongodb-writer} y con el protocolo moderno de consumidores de Kafka. La confirmación automática de offsets fue desactivada, de manera que cada mensaje se confirma únicamente después de ser almacenado correctamente en MongoDB.
+
+Los documentos se guardaron mediante una operación de actualización con inserción, utilizando el campo \texttt{event\_id} como identificador. Este mecanismo permite volver a procesar un evento sin generar documentos duplicados. Además, se almacenaron metadatos como el topic, la partición, el offset y la fecha de almacenamiento.
+
+La Figura~\ref{fig:consumer-execution} muestra la ejecución del consumidor y el procesamiento exitoso de los nueve eventos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{\actividadactual/kafka-data-pipeline/screenshots/ss-04.png}
+    \caption{Consumo de eventos de Kafka y almacenamiento en MongoDB.}
+    \label{fig:consumer-execution}
+\end{figure}
+
+\subsection{Verificación de la persistencia en MongoDB}
+
+Durante las pruebas, el productor se ejecutó dos veces, generando un total de 18 eventos. El consumidor procesó estos datos en dos ejecuciones de nueve mensajes cada una. Gracias al uso del grupo \texttt{mongodb-writer} y a la confirmación manual de offsets, la segunda ejecución continuó desde la posición confirmada por la primera.
+
+Para verificar visualmente la persistencia de los datos se utilizó MongoDB Compass. En la base de datos \texttt{kafka\_pipeline} se encontraron las tres colecciones definidas por el consumidor. Cada colección almacenó seis documentos, correspondientes a las dos ejecuciones del productor.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{\actividadactual/kafka-data-pipeline/screenshots/ss-05.png}
+    \caption{Colecciones y cantidad de documentos almacenados en MongoDB.}
+    \label{fig:mongodb-collections}
+\end{figure}
+
+La colección \texttt{simpsons\_characters} contiene los personajes obtenidos de The Simpsons API. Además de los datos originales, cada documento incluye el identificador del evento, la fecha de producción y los metadatos de Kafka.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{\actividadactual/kafka-data-pipeline/screenshots/ss-06.png}
+    \caption{Documento almacenado en la colección \texttt{simpsons\_characters}.}
+    \label{fig:mongodb-simpsons}
+\end{figure}
+
+La colección \texttt{pokemon} almacena datos como el nombre, la altura, el peso y los tipos asociados con cada Pokémon recuperado de PokéAPI.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{\actividadactual/kafka-data-pipeline/screenshots/ss-07.png}
+    \caption{Documento almacenado en la colección \texttt{pokemon}.}
+    \label{fig:mongodb-pokemon}
+\end{figure}
+
+Finalmente, la colección \texttt{random\_users} contiene los registros obtenidos de Random User API, incluyendo el nombre, correo electrónico y país de cada persona.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{\actividadactual/kafka-data-pipeline/screenshots/ss-08.png}
+    \caption{Documento almacenado en la colección \texttt{random\_users}.}
+    \label{fig:mongodb-random-users}
+\end{figure}
+
+\subsection{Estructura y archivos del proyecto}
+
+El proyecto quedó organizado de la siguiente manera:
+
+\begin{verbatim}
+kafka-data-pipeline/
+|-- app/
+|   |-- consumer.py
+|   `-- producer.py
+|-- scripts/
+|   `-- create-topics.sh'
+|-- screenshots/
+|   |-- ss-01.png
+|   |-- ss-02.png
+|   |-- ss-03.png
+|   |-- ss-04.png
+|   |-- ss-05.png
+|   |-- ss-06.png
+|   |-- ss-07.png
+|   `-- ss-08.png
+|-- .dockerignore
+|-- .env
+|-- .env.example
+|-- .gitignore
+|-- compose.yaml
+|-- Dockerfile
+`-- requirements.txt
+\end{verbatim}
+
+Los archivos se separaron según su responsabilidad para facilitar la
+reproducción, mantenimiento y revisión del pipeline.
+
+\subsubsection{Archivos de Docker}
+
+El archivo \texttt{compose.yaml} define los cuatro servicios utilizados en la
+actividad:
+
+\begin{itemize}
+    \item \texttt{kafka}: broker Apache Kafka 4.3.1 ejecutado en modo KRaft.
+    \item \texttt{mongodb}: base de datos MongoDB 8.0 con almacenamiento
+    persistente.
+    \item \texttt{producer}: aplicación Python encargada de consultar las API
+    y publicar los eventos.
+    \item \texttt{consumer}: aplicación Python que consume los eventos y los
+    almacena en MongoDB.
+\end{itemize}
+
+El archivo \texttt{Dockerfile} construye una imagen compartida por el productor
+y el consumidor. La imagen utiliza Python 3.13, instala las dependencias de
+\texttt{requirements.txt} y ejecuta la aplicación mediante un usuario sin
+privilegios administrativos.
+
+El archivo \texttt{.dockerignore} evita copiar archivos innecesarios durante la
+construcción de la imagen.
+
+\subsubsection{Configuración de Apache Kafka}
+
+La configuración de Kafka se encuentra dentro de \texttt{compose.yaml}. El
+servicio utiliza KRaft para administrar los metadatos del clúster sin depender
+de Apache ZooKeeper.
+
+Se definieron listeners separados para la comunicación interna entre
+contenedores y para el acceso desde el equipo anfitrión. El listener interno
+utiliza la dirección \texttt{kafka:19092}, mientras que el listener externo se
+publica mediante \texttt{localhost:9092}.
+
+La creación automática de tópicos fue desactivada para mantener control
+explícito sobre su nombre, cantidad de particiones y factor de replicación. Los
+tres tópicos fueron creados con una partición y un factor de replicación igual
+a uno, configuración adecuada para un entorno local de demostración.
+
+Para facilitar la reproducción de la configuración se creó el archivo
+\path{scripts/create-topics.sh}. Este script crea los tres tópicos mediante
+la herramienta administrativa incluida en Kafka. La opción
+\texttt{--if-not-exists} permite ejecutarlo varias veces sin duplicar los
+tópicos existentes.
+
+\subsubsection{Archivos de Python}
+
+El archivo \texttt{app/producer.py} contiene las funciones necesarias para
+consultar las tres API públicas, transformar las respuestas y construir los
+eventos JSON. Cada evento recibe un identificador UUID y una marca de tiempo en
+UTC antes de publicarse en el tópico correspondiente.
+
+El archivo \texttt{app/consumer.py} se suscribe a los tres tópicos, transforma
+cada mensaje en un documento de MongoDB y selecciona la colección de destino de
+acuerdo con el tópico de origen. El offset se confirma solamente después de
+completar correctamente la operación de almacenamiento.
+
+El archivo \texttt{requirements.txt} especifica las versiones de
+\texttt{requests}, \texttt{confluent-kafka} y \texttt{pymongo} utilizadas por
+ambas aplicaciones.
+
+\subsubsection{Variables de entorno}
+
+El archivo \texttt{.env} contiene las credenciales empleadas exclusivamente en
+el entorno local y se excluye mediante \texttt{.gitignore}. El archivo
+\texttt{.env.example} documenta las variables requeridas sin exponer las
+credenciales utilizadas durante la ejecución.
+
+\clearpage
+\section{Archivos fuente}
+
+En esta sección se presenta el contenido completo de los archivos utilizados
+para configurar y ejecutar el Data Pipeline. Los archivos se incluyen
+directamente desde la carpeta del proyecto para mantener sincronizado el
+reporte con la implementación.
+
+\lstset{
+    basicstyle=\ttfamily\scriptsize,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=8pt,
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=false,
+    showstringspaces=false,
+    keepspaces=true,
+    tabsize=4,
+    captionpos=b
+}
+
+\subsection{Archivos de Docker}
+
+\subsubsection{Docker Compose}
+
+El archivo \texttt{compose.yaml} define los servicios de Kafka, MongoDB,
+el productor y el consumidor, así como la red y el volumen persistente.
+
+\lstinputlisting[
+    language={},
+    caption={Configuración de Docker Compose},
+    label={lst:compose}
+]{\actividadactual/kafka-data-pipeline/compose.yaml}
+
+\subsubsection{Dockerfile}
+
+El archivo \texttt{Dockerfile} construye la imagen utilizada por las dos
+aplicaciones Python.
+
+\lstinputlisting[
+    language={},
+    caption={Imagen Docker de las aplicaciones Python},
+    label={lst:dockerfile}
+]{\actividadactual/kafka-data-pipeline/Dockerfile}
+
+\subsubsection{Archivos auxiliares de Docker}
+
+El archivo \texttt{.dockerignore} excluye elementos que no deben copiarse
+durante la construcción de la imagen.
+
+\lstinputlisting[
+    language={},
+    caption={Archivo .dockerignore},
+    label={lst:dockerignore}
+]{\actividadactual/kafka-data-pipeline/.dockerignore}
+
+El archivo \texttt{.env.example} documenta las variables requeridas sin
+mostrar las credenciales locales utilizadas durante la actividad.
+
+\lstinputlisting[
+    language={},
+    caption={Ejemplo de variables de entorno},
+    label={lst:env-example}
+]{\actividadactual/kafka-data-pipeline/.env.example}
+
+El archivo real \texttt{.env} no se incluye en el reporte porque contiene
+credenciales del entorno local.
+
+\subsection{Archivo de configuración de Kafka}
+
+El script \texttt{create-topics.sh} automatiza la creación idempotente de los
+tres tópicos utilizados por el pipeline.
+
+\lstinputlisting[
+    language=bash,
+    caption={Creación de los tópicos de Kafka},
+    label={lst:create-topics}
+]{\actividadactual/kafka-data-pipeline/scripts/create-topics.sh}
+
+La configuración del broker, sus listeners y el modo KRaft se encuentran en
+el servicio \texttt{kafka} del archivo \texttt{compose.yaml}, mostrado en el
+Listado~\ref{lst:compose}.
+
+\subsection{Archivos de Python}
+
+\subsubsection{Dependencias}
+
+El archivo \texttt{requirements.txt} contiene las bibliotecas utilizadas por
+el productor y el consumidor.
+
+\lstinputlisting[
+    language={},
+    caption={Dependencias de Python},
+    label={lst:requirements}
+]{\actividadactual/kafka-data-pipeline/requirements.txt}
+
+\clearpage
+\subsubsection{Productor}
+
+El archivo \texttt{producer.py} consulta las tres API, construye los eventos
+JSON y los publica en los tópicos correspondientes.
+
+\lstinputlisting[
+    language=Python,
+    caption={Implementación del productor de Kafka},
+    label={lst:producer}
+]{\actividadactual/kafka-data-pipeline/app/producer.py}
+
+\subsubsection{Consumidor}
+
+El archivo \texttt{consumer.py} procesa los mensajes de Kafka, selecciona la
+colección de destino, almacena los documentos en MongoDB y confirma los
+offsets procesados.
+
+\lstinputlisting[
+    language=Python,
+    caption={Implementación del consumidor de Kafka},
+    label={lst:consumer}
+]{\actividadactual/kafka-data-pipeline/app/consumer.py}
+
+\section{Resultados}
+
+La implementación permitió completar el flujo de datos desde las tres API
+públicas hasta MongoDB. Apache Kafka recibió los eventos generados por el
+productor y los mantuvo separados mediante tres tópicos independientes.
+
+La ejecución del productor confirmó la publicación correcta de cada mensaje,
+mostrando el tópico, la partición y el offset asignado. Durante las pruebas se
+realizaron dos ejecuciones, con lo que se produjeron 18 eventos en total.
+
+El consumidor procesó los eventos mediante el grupo
+\texttt{mongodb-writer}. Después de almacenar cada documento en MongoDB,
+confirmó manualmente su offset para reducir el riesgo de pérdida de datos ante
+una interrupción durante el procesamiento.
+
+La verificación mediante MongoDB Compass mostró seis documentos en cada una de
+las siguientes colecciones:
+
+\begin{itemize}
+    \item \texttt{simpsons\_characters}
+    \item \texttt{pokemon}
+    \item \texttt{random\_users}
+\end{itemize}
+
+Además de la información obtenida de las API, cada documento conserva el
+identificador del evento, la fecha de producción, la fecha de almacenamiento y
+los metadatos de Kafka. Esto permite identificar el tópico, la partición y el
+offset de origen de cada registro.
+
+\section{Conclusiones}
+
+El desarrollo de la actividad permitió implementar un Data Pipeline completo
+basado en eventos. La separación de las fuentes mediante tópicos independientes
+facilitó la organización de los datos y permitió que el consumidor determinara
+la colección de destino de cada mensaje.
+
+El uso de Apache Kafka desacopló la extracción de datos de su almacenamiento.
+El productor puede publicar eventos sin depender directamente de MongoDB,
+mientras que el consumidor puede procesarlos posteriormente de acuerdo con su
+propio ritmo.
+
+La utilización de KRaft permitió ejecutar una versión moderna de Kafka sin
+Apache ZooKeeper. Asimismo, Docker Compose facilitó la definición de los
+servicios, la red interna, las variables de entorno y las comprobaciones de
+salud necesarias para reproducir el entorno.
+
+La confirmación manual de offsets después de almacenar cada documento mejoró
+la confiabilidad del consumidor. Por otra parte, el uso de operaciones
+\textit{upsert} basadas en \texttt{event\_id} permitió que el almacenamiento
+fuera idempotente y evitó la creación de documentos duplicados durante un
+eventual reprocesamiento.
+
+Finalmente, MongoDB resultó adecuado como destino para los eventos debido a su
+modelo flexible de documentos, el cual permitió conservar tanto los datos
+particulares de cada API como los metadatos comunes del pipeline.
